@@ -2,7 +2,9 @@ package gd;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
-import java.awt.*;
+import dao.KhoaDAO;
+import model.Khoa;
+import java.util.ArrayList;
 
 public class QLKhoa extends JFrame {
 
@@ -12,14 +14,14 @@ public class QLKhoa extends JFrame {
     private DefaultListModel<String> listModel;
 
     public QLKhoa() {
+
         setTitle("Quản lý khoa");
         setSize(800, 450);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(null);
 
-        JPanel pnlThongTin = new JPanel();
-        pnlThongTin.setLayout(null);
+        JPanel pnlThongTin = new JPanel(null);
         pnlThongTin.setBorder(new TitledBorder("Thông tin chi tiết khoa"));
         pnlThongTin.setBounds(10, 10, 480, 380);
         add(pnlThongTin);
@@ -32,7 +34,6 @@ public class QLKhoa extends JFrame {
         txtMaKhoa.setBounds(130, 40, 300, 25);
         pnlThongTin.add(txtMaKhoa);
 
-     
         JLabel lblTen = new JLabel("Tên khoa (*)");
         lblTen.setBounds(20, 80, 100, 25);
         pnlThongTin.add(lblTen);
@@ -61,13 +62,7 @@ public class QLKhoa extends JFrame {
         btnThoat.setBounds(170, 190, 120, 35);
         pnlThongTin.add(btnThoat);
 
-        JLabel lblNote = new JLabel(
-                "<html><font color='red'>Lưu ý: Các thông tin có dấu (*) là bắt buộc.</font></html>");
-        lblNote.setBounds(20, 250, 400, 30);
-        pnlThongTin.add(lblNote);
-
-        JPanel pnlDanhSach = new JPanel();
-        pnlDanhSach.setLayout(null);
+        JPanel pnlDanhSach = new JPanel(null);
         pnlDanhSach.setBorder(new TitledBorder("Danh sách khoa"));
         pnlDanhSach.setBounds(500, 10, 270, 380);
         add(pnlDanhSach);
@@ -80,6 +75,15 @@ public class QLKhoa extends JFrame {
         pnlDanhSach.add(scroll);
 
         xuLySuKien();
+        loadData();
+    }
+
+    private void loadData() {
+        listModel.clear();
+        ArrayList<Khoa> ds = KhoaDAO.layDanhSachKhoa();
+        for (Khoa k : ds) {
+            listModel.addElement(k.getMaKhoa() + " - " + k.getTenKhoa());
+        }
     }
 
     private void xuLySuKien() {
@@ -92,19 +96,42 @@ public class QLKhoa extends JFrame {
 
         btnLuu.addActionListener(e -> {
 
-            String maKhoa = txtMaKhoa.getText().trim();
-            String tenKhoa = txtTenKhoa.getText().trim();
+            String ma = txtMaKhoa.getText().trim();
+            String ten = txtTenKhoa.getText().trim();
 
-            if (maKhoa.isEmpty() || tenKhoa.isEmpty()) {
-                JOptionPane.showMessageDialog(this,
-                        "Vui lòng nhập đầy đủ thông tin!");
+            if (ma.isEmpty() || ten.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Nhập đầy đủ thông tin!");
                 return;
             }
 
-            listModel.addElement(maKhoa + " - " + tenKhoa);
+            Khoa k = new Khoa(ma, ten);
 
-            JOptionPane.showMessageDialog(this,
-                    "Lưu thành công!");
+            if (KhoaDAO.themKhoa(k)) {
+                JOptionPane.showMessageDialog(this, "Thêm thành công!");
+                loadData();
+            } else {
+                JOptionPane.showMessageDialog(this, "Thêm thất bại!");
+            }
+        });
+
+        btnSua.addActionListener(e -> {
+
+            String ma = txtMaKhoa.getText().trim();
+            String ten = txtTenKhoa.getText().trim();
+
+            if (ma.isEmpty() || ten.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Nhập đầy đủ thông tin!");
+                return;
+            }
+
+            Khoa k = new Khoa(ma, ten);
+
+            if (KhoaDAO.suaKhoa(k)) {
+                JOptionPane.showMessageDialog(this, "Cập nhật thành công!");
+                loadData();
+            } else {
+                JOptionPane.showMessageDialog(this, "Cập nhật thất bại!");
+            }
         });
 
         btnXoa.addActionListener(e -> {
@@ -112,36 +139,28 @@ public class QLKhoa extends JFrame {
             int index = listKhoa.getSelectedIndex();
 
             if (index == -1) {
-                JOptionPane.showMessageDialog(this,
-                        "Chọn khoa cần xóa!");
+                JOptionPane.showMessageDialog(this, "Chọn khoa cần xóa!");
                 return;
             }
 
-            listModel.remove(index);
-        });
+            String item = listKhoa.getSelectedValue();
+            String ma = item.split(" - ")[0];
 
-        btnThoat.addActionListener(e -> {
-            int c = JOptionPane.showConfirmDialog(
-                    this,
-                    "Bạn có muốn thoát không?",
-                    "Xác nhận",
-                    JOptionPane.YES_NO_OPTION);
-
-            if (c == JOptionPane.YES_OPTION) {
-                System.exit(0);
+            if (KhoaDAO.xoaKhoa(ma)) {
+                JOptionPane.showMessageDialog(this, "Xóa thành công!");
+                loadData();
+            } else {
+                JOptionPane.showMessageDialog(this, "Xóa thất bại!");
             }
         });
 
+        btnThoat.addActionListener(e -> System.exit(0));
+
         listKhoa.addListSelectionListener(e -> {
-
             if (!e.getValueIsAdjusting()) {
-
                 String item = listKhoa.getSelectedValue();
-
                 if (item != null) {
-
                     String[] arr = item.split(" - ");
-
                     txtMaKhoa.setText(arr[0]);
                     txtTenKhoa.setText(arr[1]);
                 }
@@ -150,9 +169,8 @@ public class QLKhoa extends JFrame {
     }
 
     public static void main(String[] args) {
-
         SwingUtilities.invokeLater(() -> {
             new QLKhoa().setVisible(true);
         });
     }
-}	
+}

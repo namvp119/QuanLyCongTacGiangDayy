@@ -7,41 +7,79 @@ import java.util.ArrayList;
 import model.Khoa;
 
 public class KhoaDAO {
-    
-    // Hàm lấy danh sách tất cả các Khoa để sau này Ân đổ lên JTable
+
     public static ArrayList<Khoa> layDanhSachKhoa() {
-        ArrayList<Khoa> dsKhoa = new ArrayList<>();
+
+        ArrayList<Khoa> ds = new ArrayList<>();
+
         try {
-            // Gọi file DatabaseConnection mà bạn đã tạo lúc nãy
             Connection conn = DatabaseConnection.getConnection();
             String sql = "SELECT * FROM KHOA";
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
-            
+
             while (rs.next()) {
                 Khoa k = new Khoa();
                 k.setMaKhoa(rs.getString("MAKHOA"));
                 k.setTenKhoa(rs.getString("TENKHOA"));
-                dsKhoa.add(k);
+                ds.add(k);
             }
+
             conn.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return dsKhoa;
+
+        return ds;
     }
 
-    // Hàm main để Nam tự test thử ngầm dưới hệ thống trước khi ráp giao diện
-    public static void main(String[] args) {
-        ArrayList<Khoa> list = layDanhSachKhoa();
-        
-        if (list.isEmpty()) {
-            System.out.println("Chưa có dữ liệu Khoa nào trong CSDL, hoặc kết nối bị lỗi!");
-        } else {
-            System.out.println("--- DANH SÁCH KHOA LẤY TỪ DATABASE ---");
-            for (Khoa k : list) {
-                System.out.println("Mã khoa: " + k.getMaKhoa() + " | Tên khoa: " + k.getTenKhoa());
-            }
+    public static boolean themKhoa(Khoa k) {
+        try {
+            Connection conn = DatabaseConnection.getConnection();
+            String sql = "INSERT INTO KHOA VALUES (?, ?)";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, k.getMaKhoa());
+            ps.setString(2, k.getTenKhoa());
+
+            int rows = ps.executeUpdate();
+            conn.close();
+            return rows > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        return false;
+    }
+
+    public static boolean suaKhoa(Khoa k) {
+        try {
+            Connection conn = DatabaseConnection.getConnection();
+            String sql = "UPDATE KHOA SET TENKHOA=? WHERE MAKHOA=?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, k.getTenKhoa());
+            ps.setString(2, k.getMaKhoa());
+
+            int rows = ps.executeUpdate();
+            conn.close();
+            return rows > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public static boolean xoaKhoa(String maKhoa) {
+        try {
+            Connection conn = DatabaseConnection.getConnection();
+            String sql = "DELETE FROM KHOA WHERE MAKHOA=?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, maKhoa);
+
+            int rows = ps.executeUpdate();
+            conn.close();
+            return rows > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
