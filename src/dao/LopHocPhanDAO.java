@@ -163,4 +163,39 @@ public class LopHocPhanDAO {
         } catch (Exception e) { e.printStackTrace(); }
         return list;
     }
+ // Hàm mới: Lấy lịch dạy theo Mã Giảng Viên và Học Kỳ
+    public static java.util.List<model.LopHocPhan> layLichDayCuaGiangVien(String mscb, String maHocKy) {
+        java.util.List<model.LopHocPhan> list = new java.util.ArrayList<>();
+        
+        // Truy vấn cơ bản: Lấy theo Mã cán bộ
+        String sql = "SELECT * FROM lophocphan WHERE MSCB = ?";
+        
+        // Nếu người dùng chọn một học kỳ cụ thể (không phải 'Tất cả') thì nối thêm điều kiện
+        if (maHocKy != null && !maHocKy.equals("Tất cả")) {
+            sql += " AND MAHOCKY = '" + maHocKy + "'";
+        }
+        
+        try (java.sql.Connection conn = DatabaseConnection.getConnection();
+             java.sql.PreparedStatement ps = conn.prepareStatement(sql)) {
+             
+            ps.setString(1, mscb);
+            java.sql.ResultSet rs = ps.executeQuery();
+            
+            while (rs.next()) {
+                model.LopHocPhan lhp = new model.LopHocPhan();
+                lhp.setMaLHP(rs.getString("MaLHP"));
+                lhp.setTenLHP(rs.getString("TenLHP"));
+                lhp.setMaMH(rs.getString("MaMH"));
+                lhp.setMscb(rs.getString("MSCB"));
+                lhp.setMaPhong(rs.getString("MaPhong"));
+                lhp.setMaHocKy(rs.getString("MAHOCKY"));
+                lhp.setSiSo(rs.getInt("SiSo"));
+                lhp.setNgay(rs.getDate("Ngay"));
+                list.add(lhp);
+            }
+        } catch (Exception e) { 
+            e.printStackTrace(); 
+        }
+        return list;
+    }
 }

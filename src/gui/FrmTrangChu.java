@@ -174,8 +174,7 @@ public class FrmTrangChu extends JFrame {
 
         // 3. Nghiệp Vụ - Lịch Dạy (Phần của Duy - package gui)
         mniPhanCong.addActionListener(e -> new gui.FrmPhanCong().setVisible(true));
-        mniXemLich.addActionListener(e -> new gui.FrmXemLich().setVisible(true));
-
+        mniXemLich.addActionListener(e -> new gui.FrmXemLich(tenUser, quyen).setVisible(true));
         // 4. Tính Lương & Báo Cáo 
         // Gọi form QLChucDanh của Ân làm cấu hình hệ số lương luôn
         mniCauHinhLuong.addActionListener(e -> new gd.QLChucDanh().setVisible(true));
