@@ -33,15 +33,14 @@ public class FrmQuanLyTaiKhoan extends JFrame {
     private JPanel contentPane;
     private JTextField txtTaiKhoan;
     private JTextField txtMatKhau;
-    private JTextField txtTimKiem; // Thêm biến cho ô tìm kiếm
+    private JTextField txtTimKiem; 
     
     private JComboBox<LoaiNguoiDung> cboQuyen; 
     
     private JTable tblTaiKhoan;
     private DefaultTableModel model;
-    private TableRowSorter<DefaultTableModel> rowSorter; // Bộ lọc tìm kiếm
+    private TableRowSorter<DefaultTableModel> rowSorter; 
 
-    // Khai báo các DAO xử lý dữ liệu
     private TaiKhoanDAO tkDAO = new TaiKhoanDAO();
     private LoaiNguoiDungDAO loaiDAO = new LoaiNguoiDungDAO();
 
@@ -62,7 +61,6 @@ public class FrmQuanLyTaiKhoan extends JFrame {
         lblTieuDe.setBounds(180, 15, 400, 30);
         contentPane.add(lblTieuDe);
 
-        // --- KHU VỰC NHẬP LIỆU ---
         JPanel pnlInput = new JPanel();
         pnlInput.setBorder(new TitledBorder("Thông tin tài khoản"));
         pnlInput.setBounds(20, 60, 660, 110);
@@ -91,8 +89,7 @@ public class FrmQuanLyTaiKhoan extends JFrame {
         cboQuyen.setBounds(120, 70, 220, 25);
         pnlInput.add(cboQuyen);
 
-        // --- KHU VỰC NÚT BẤM & TÌM KIẾM ---
-        // Đã canh lại tọa độ để nhường chỗ cho thanh tìm kiếm
+    
         JButton btnThem = new JButton("Cấp Tài Khoản");
         btnThem.setBounds(20, 190, 130, 35);
         btnThem.setBackground(new Color(46, 139, 87));
@@ -109,7 +106,6 @@ public class FrmQuanLyTaiKhoan extends JFrame {
         btnLamMoi.setBounds(290, 190, 100, 35);
         contentPane.add(btnLamMoi);
 
-        // Thêm thanh Tìm kiếm
         JLabel lblTimKiem = new JLabel("Tìm kiếm:");
         lblTimKiem.setFont(new Font("Tahoma", Font.BOLD, 12));
         lblTimKiem.setBounds(410, 197, 70, 20);
@@ -120,7 +116,6 @@ public class FrmQuanLyTaiKhoan extends JFrame {
         txtTimKiem.setToolTipText("Nhập tên đăng nhập hoặc quyền...");
         contentPane.add(txtTimKiem);
 
-        // --- BẢNG DỮ LIỆU ---
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.setBounds(20, 240, 660, 190);
         contentPane.add(scrollPane);
@@ -132,7 +127,6 @@ public class FrmQuanLyTaiKhoan extends JFrame {
         };
         tblTaiKhoan = new JTable(model);
         
-        // Gắn bộ lọc tìm kiếm cho Bảng
         rowSorter = new TableRowSorter<>(model);
         tblTaiKhoan.setRowSorter(rowSorter);
         scrollPane.setViewportView(tblTaiKhoan);
@@ -140,7 +134,6 @@ public class FrmQuanLyTaiKhoan extends JFrame {
         loadData();
         loadComboBoxLoaiND();
 
-        // --- SỰ KIỆN GÕ BÀN PHÍM TÌM KIẾM REAL-TIME ---
         txtTimKiem.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
@@ -148,18 +141,15 @@ public class FrmQuanLyTaiKhoan extends JFrame {
                 if (text.trim().length() == 0) {
                     rowSorter.setRowFilter(null); 
                 } else {
-                    // (?i) để tìm kiếm không phân biệt hoa thường
                     rowSorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
                 }
             }
         });
 
-        // --- SỰ KIỆN CLICK BẢNG ---
         tblTaiKhoan.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 int r = tblTaiKhoan.getSelectedRow();
                 if (r >= 0) {
-                    // Chuyển đổi Index hiển thị sang Index thật của Model khi dùng Sorter
                     int modelRow = tblTaiKhoan.convertRowIndexToModel(r);
                     
                     txtTaiKhoan.setText(model.getValueAt(modelRow, 0).toString());
@@ -181,8 +171,8 @@ public class FrmQuanLyTaiKhoan extends JFrame {
         btnLamMoi.addActionListener(e -> {
             txtTaiKhoan.setText("");
             txtMatKhau.setText("123");
-            txtTimKiem.setText(""); // Reset thanh tìm kiếm
-            rowSorter.setRowFilter(null); // Trả bảng về ban đầu
+            txtTimKiem.setText(""); 
+            rowSorter.setRowFilter(null); 
             
             if(cboQuyen.getItemCount() > 0) cboQuyen.setSelectedIndex(0);
             txtTaiKhoan.setEditable(true);

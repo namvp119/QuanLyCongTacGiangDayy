@@ -41,7 +41,6 @@ public class FrmXemLich extends JFrame {
         lblTieuDe.setBounds(230, 15, 450, 30);
         contentPane.add(lblTieuDe);
 
-        // ================= BỘ LỌC =================
         JPanel pnlFilter = new JPanel();
         pnlFilter.setBorder(new TitledBorder("Bộ lọc lịch dạy"));
         pnlFilter.setBounds(30, 60, 820, 70);
@@ -70,7 +69,6 @@ public class FrmXemLich extends JFrame {
 
         loadHocKy();
 
-        // ================= PHÂN QUYỀN =================
         if (quyen.equals("giangvien")) {
             txtMaCB.setEditable(false);
             txtMaCB.setForeground(Color.RED);
@@ -78,7 +76,6 @@ public class FrmXemLich extends JFrame {
             txtMaCB.setToolTipText("Admin/Giáo vụ có thể nhập mã giảng viên khác và Enter");
         }
 
-        // ================= BẢNG =================
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.setBounds(30, 150, 820, 300);
         contentPane.add(scrollPane);
@@ -103,16 +100,13 @@ public class FrmXemLich extends JFrame {
         tblLichDay.setRowHeight(25);
         scrollPane.setViewportView(tblLichDay);
 
-        // ================= SỰ KIỆN =================
         cboHocKy.addActionListener(e -> loadDuLieuLichDay());
         txtMaCB.addActionListener(e -> loadDuLieuLichDay());
 
         loadDuLieuLichDay();
     }
 
-    // =========================================================
-    // LOAD HỌC KỲ
-    // =========================================================
+
     private void loadHocKy() {
         try {
             for (String hk : dao.LopHocPhanDAO.getDSHocKy()) {
@@ -123,9 +117,7 @@ public class FrmXemLich extends JFrame {
         }
     }
 
-    // =========================================================
-    // LOAD DỮ LIỆU LỊCH DẠY
-    // =========================================================
+  
     private void loadDuLieuLichDay() {
 
         model.setRowCount(0);

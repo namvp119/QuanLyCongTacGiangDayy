@@ -19,7 +19,6 @@ public class FrmDoiMatKhau extends JFrame {
     private JPasswordField txtXacNhan;
     private String tenDangNhap; 
     
-    // Gọi DAO đã tạo trước đó
     private dao.TaiKhoanDAO tkDAO = new dao.TaiKhoanDAO();
 
     public FrmDoiMatKhau(String user) {
@@ -72,7 +71,6 @@ public class FrmDoiMatKhau extends JFrame {
         btnLuu.setBounds(160, 210, 120, 35);
         contentPane.add(btnLuu);
         
-        // Sự kiện đổi mật khẩu
         btnLuu.addActionListener(e -> xuLyDoiMatKhau());
     }
 
@@ -91,7 +89,6 @@ public class FrmDoiMatKhau extends JFrame {
             return;
         }
 
-        // ĐÃ ĐƯỢC LÀM SẠCH: Giao tiếp trực tiếp với DAO
         boolean isSuccess = tkDAO.doiMatKhau(tenDangNhap, passCu, passMoi);
         
         if (isSuccess) {

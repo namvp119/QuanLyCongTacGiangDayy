@@ -29,7 +29,6 @@ public class FrmTinhLuong extends JFrame {
     private JButton btnLuuDb;
     private JButton btnXuatExcel;
     
-    // Khai báo DAO
     private dao.TinhLuongDAO tlDAO = new dao.TinhLuongDAO();
 
     public FrmTinhLuong() {
@@ -49,7 +48,6 @@ public class FrmTinhLuong extends JFrame {
         lblTieuDe.setBounds(230, 10, 400, 30);
         contentPane.add(lblTieuDe);
         
-        // --- KHU VỰC ĐIỀU KHIỂN ---
         JLabel lblHocKy = new JLabel("Chọn Học Kỳ cần tính:");
         lblHocKy.setFont(new Font("Tahoma", Font.BOLD, 12));
         lblHocKy.setBounds(50, 60, 150, 25);
@@ -79,7 +77,6 @@ public class FrmTinhLuong extends JFrame {
         btnLuuDb.setEnabled(false); 
         contentPane.add(btnLuuDb);
         
-        // --- KHU VỰC BẢNG ---
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.setBounds(30, 110, 780, 320);
         contentPane.add(scrollPane);
@@ -97,7 +94,6 @@ public class FrmTinhLuong extends JFrame {
         
         loadHocKy();
         
-        // --- BẮT SỰ KIỆN CLICK ĐÚP ---
         tblLuong.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent e) {
                 if (e.getClickCount() == 2) { 
@@ -112,13 +108,11 @@ public class FrmTinhLuong extends JFrame {
             }
         });
         
-        // BẮT SỰ KIỆN NÚT BẤM
         btnTinhLuong.addActionListener(e -> thucHienTinhLuong());
         btnLuuDb.addActionListener(e -> luuVaoDatabase());
         btnXuatExcel.addActionListener(e -> xuatFileExcel());
     }
 
-    // --- ĐÃ ĐƯỢC LÀM SẠCH BẰNG DAO ---
     private void xemChiTietLuong(String mscb, String tenCB, String hk) {
         try {
             ResultSet rs = tlDAO.layChiTietLuong(mscb, hk);
@@ -209,7 +203,6 @@ public class FrmTinhLuong extends JFrame {
         }
     }
 
-    // --- ĐÃ ĐƯỢC LÀM SẠCH BẰNG DAO ---
     private void thucHienTinhLuong() {
         tableModel.setRowCount(0);
         if(cboHocKy.getSelectedItem() == null) return;

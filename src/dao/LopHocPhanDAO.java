@@ -10,9 +10,6 @@ import model.LopHocPhan;
 
 public class LopHocPhanDAO {
 
-    // =========================================================
-    // 1. LẤY DANH SÁCH TẤT CẢ LỚP HỌC PHẦN
-    // =========================================================
     public static ArrayList<LopHocPhan> layDanhSachLopHocPhan() {
 
         ArrayList<LopHocPhan> dsLHP = new ArrayList<>();
@@ -52,9 +49,7 @@ public class LopHocPhanDAO {
         return dsLHP;
     }
 
-    // =========================================================
-    // 2. THÊM LỚP HỌC PHẦN
-    // =========================================================
+   
     public static boolean themLopHocPhan(LopHocPhan lhp) {
 
         boolean ketQua = false;
@@ -93,9 +88,6 @@ public class LopHocPhanDAO {
         return ketQua;
     }
 
-    // =========================================================
-    // 3. CẬP NHẬT LỚP HỌC PHẦN
-    // =========================================================
     public static boolean capNhatLopHocPhan(LopHocPhan lhp) {
 
         boolean ketQua = false;
@@ -135,9 +127,7 @@ public class LopHocPhanDAO {
         return ketQua;
     }
 
-    // =========================================================
-    // 4. XÓA LỚP HỌC PHẦN
-    // =========================================================
+ 
     public static boolean xoaLopHocPhan(String maLHP) {
 
         boolean ketQua = false;
@@ -161,9 +151,6 @@ public class LopHocPhanDAO {
         return ketQua;
     }
 
-    // =========================================================
-    // 5. CÁC HÀM ĐỔ DỮ LIỆU COMBOBOX
-    // =========================================================
 
     public static List<String> getDSGiangVien() {
         List<String> list = new ArrayList<>();
@@ -240,9 +227,7 @@ public class LopHocPhanDAO {
         return list;
     }
 
-    // =========================================================
-    // 6. LẤY LỊCH DẠY CỦA GIẢNG VIÊN
-    // =========================================================
+
     public static List<LopHocPhan> layLichDayCuaGiangVien(String mscb, String maHocKy) {
 
         List<LopHocPhan> list = new ArrayList<>();

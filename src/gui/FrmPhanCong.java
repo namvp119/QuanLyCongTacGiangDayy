@@ -59,7 +59,6 @@ public class FrmPhanCong extends JFrame {
         lblTieuDe.setBounds(330, 10, 400, 30);
         contentPane.add(lblTieuDe);
 
-        // ================= CỘT 1 =================
         JLabel lblMa = new JLabel("Mã LHP:");
         lblMa.setBounds(30, 60, 100, 25);
         contentPane.add(lblMa);
@@ -100,7 +99,6 @@ public class FrmPhanCong extends JFrame {
         txtNgayKT.setBounds(130, 220, 180, 25);
         contentPane.add(txtNgayKT);
 
-        // ================= CỘT 2 =================
         JLabel lblGV = new JLabel("Giảng Viên:");
         lblGV.setBounds(350, 60, 100, 25);
         contentPane.add(lblGV);
@@ -141,7 +139,6 @@ public class FrmPhanCong extends JFrame {
         cboLop.setBounds(470, 220, 200, 25);
         contentPane.add(cboLop);
 
-        // ================= CỘT 3 =================
         JLabel lblTinhTrang = new JLabel("Tình Trạng:");
         lblTinhTrang.setBounds(720, 60, 100, 25);
         contentPane.add(lblTinhTrang);
@@ -152,7 +149,6 @@ public class FrmPhanCong extends JFrame {
         cboTinhTrang.setBounds(820, 60, 150, 25);
         contentPane.add(cboTinhTrang);
 
-        // ================= NÚT =================
         btnThem = new JButton("Thêm");
         btnThem.setBounds(250, 270, 120, 35);
         contentPane.add(btnThem);
@@ -169,7 +165,6 @@ public class FrmPhanCong extends JFrame {
         btnLamMoi.setBounds(670, 270, 120, 35);
         contentPane.add(btnLamMoi);
 
-        // ================= BẢNG =================
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.setBounds(30, 330, 940, 280);
         contentPane.add(scrollPane);
@@ -186,7 +181,6 @@ public class FrmPhanCong extends JFrame {
         loadTatCaComboBox();
         docDuLieuVaoBang();
 
-        // ================= NÚT THÊM =================
         btnThem.addActionListener(e -> {
             try {
                 model.LopHocPhan lhp = new model.LopHocPhan();
@@ -216,7 +210,6 @@ public class FrmPhanCong extends JFrame {
             }
         });
 
-        // ================= NÚT CẬP NHẬT =================
         btnSua.addActionListener(e -> {
             try {
                 model.LopHocPhan lhp = new model.LopHocPhan();
@@ -246,7 +239,6 @@ public class FrmPhanCong extends JFrame {
             }
         });
 
-        // ================= CLICK BẢNG =================
         tblPhanCong.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent e) {
 

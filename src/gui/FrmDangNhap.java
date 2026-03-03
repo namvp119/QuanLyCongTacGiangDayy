@@ -24,8 +24,6 @@ public class FrmDangNhap extends JFrame {
     private JPanel contentPane;
     private JTextField txtTaiKhoan;
     private JPasswordField txtMatKhau;
-
-    // ---> KHAI BÁO DAO Ở ĐÂY <---
     private TaiKhoanDAO tkDAO = new TaiKhoanDAO();
 
     public static void main(String[] args) {
@@ -88,7 +86,6 @@ public class FrmDangNhap extends JFrame {
         btnThoat.setBounds(220, 160, 100, 30);
         contentPane.add(btnThoat);
         
-        // 1. SỰ KIỆN NÚT ĐĂNG NHẬP (Đã dọn dẹp ký tự lỗi và gắn logic DAO chuẩn)
         btnDangNhap.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String taiKhoan = txtTaiKhoan.getText();
@@ -99,14 +96,11 @@ public class FrmDangNhap extends JFrame {
                     return;
                 }
 
-                // Gọi DAO kiểm tra
                 TaiKhoan tk = tkDAO.kiemTraDangNhap(taiKhoan, matKhau);
 
                 if (tk != null) {
                     JOptionPane.showMessageDialog(null, "Chào mừng " + tk.getTenDangNhap() + "!");
-                    dispose(); // Đóng form Đăng Nhập
-                    
-                    // Truyền tham số Tên và Quyền (Mã Loại) sang Trang Chủ
+                    dispose(); 
                     FrmTrangChu frmTrangChu = new FrmTrangChu(tk.getTenDangNhap(), tk.getMaLoai());
                     frmTrangChu.setVisible(true); 
                     
@@ -116,7 +110,6 @@ public class FrmDangNhap extends JFrame {
             }
         });
 
-        // 2. SỰ KIỆN NÚT THOÁT
         btnThoat.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int xacNhan = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn thoát?", "Xác nhận", JOptionPane.YES_NO_OPTION);

@@ -20,11 +20,9 @@ public class FrmThongKe extends JFrame {
     private JComboBox<String> cboHocKy;
     private JComboBox<String> cboKhoa;
     
-    // Bảng Tab 1 (Giảng viên)
     private JTable tblGiangVien;
     private DefaultTableModel modelGV;
     
-    // Bảng Tab 2 (Khoa)
     private JTable tblKhoa;
     private DefaultTableModel modelKhoa;
 
@@ -47,7 +45,6 @@ public class FrmThongKe extends JFrame {
         lblTieuDe.setBounds(280, 10, 450, 30);
         contentPane.add(lblTieuDe);
         
-        // BỘ LỌC CHUNG
         JPanel pnlFilter = new JPanel();
         pnlFilter.setBounds(20, 50, 890, 60);
         pnlFilter.setLayout(null);
@@ -79,12 +76,10 @@ public class FrmThongKe extends JFrame {
         btnThongKe.setBounds(560, 10, 180, 35);
         pnlFilter.add(btnThongKe);
 
-        // --- KHU VỰC TABBED PANE ---
         JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
         tabbedPane.setBounds(20, 120, 890, 370);
         contentPane.add(tabbedPane);
 
-        // TAB 1: THỐNG KÊ GIẢNG VIÊN
         JPanel pnlGV = new JPanel();
         pnlGV.setLayout(new BorderLayout());
         tabbedPane.addTab("Báo Cáo Giảng Viên (Vượt Giờ)", null, pnlGV, null);
@@ -97,7 +92,6 @@ public class FrmThongKe extends JFrame {
         tblGiangVien = new JTable(modelGV);
         pnlGV.add(new JScrollPane(tblGiangVien), BorderLayout.CENTER);
 
-        // TAB 2: THỐNG KÊ KHOA
         JPanel pnlKhoa = new JPanel();
         pnlKhoa.setLayout(new BorderLayout());
         tabbedPane.addTab("Thống Kê Tổng Lực Theo Khoa", null, pnlKhoa, null);
@@ -110,17 +104,14 @@ public class FrmThongKe extends JFrame {
         tblKhoa = new JTable(modelKhoa);
         pnlKhoa.add(new JScrollPane(tblKhoa), BorderLayout.CENTER);
 
-        // --- NẠP DỮ LIỆU BAN ĐẦU ---
         loadHocKy();
         loadDanhSachKhoa();
 
-        // --- BẮT SỰ KIỆN NÚT BẤM ---
         btnThongKe.addActionListener(e -> {
             xuLyThongKeGV();
             xuLyThongKeKhoa();
         });
 
-        // --- SỰ KIỆN CLICK ĐÚP CHUỘT VÀO BẢNG GIẢNG VIÊN ---
         tblGiangVien.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) { 
@@ -150,7 +141,7 @@ public class FrmThongKe extends JFrame {
         try {
             Connection conn = dao.DatabaseConnection.getConnection();
             Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery("SELECT MAKHOA FROM KHOA"); // Lưu ý: Lấy mã khoa cho chuẩn SQL
+            ResultSet rs = st.executeQuery("SELECT MAKHOA FROM KHOA"); 
             while(rs.next()) cboKhoa.addItem(rs.getString(1));
             conn.close();
         } catch (Exception e) { e.printStackTrace(); }
@@ -179,7 +170,6 @@ public class FrmThongKe extends JFrame {
         }
     }
 
-    // --- HÀM DRILL-DOWN: HIỂN THỊ POPUP CHI TIẾT KHI CLICK ĐÚP ---
     private void hienThiChiTiet(String mscb, String tenCB, String hk) {
         try {
             ResultSet rs = tkDAO.getChiTietGiangDay(mscb, hk);
@@ -204,7 +194,7 @@ public class FrmThongKe extends JFrame {
             
             JOptionPane.showMessageDialog(this, scrollPane, "Chi tiết lớp dạy: " + tenCB + " (" + hk + ")", JOptionPane.INFORMATION_MESSAGE);
             
-            rs.getStatement().getConnection().close(); // Đóng kết nối ResultSet
+            rs.getStatement().getConnection().close(); 
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Lỗi truy xuất chi tiết!");

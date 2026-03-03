@@ -30,13 +30,11 @@ public class FrmTrangChu extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 1000, 650);
         setLocationRelativeTo(null);
-        setExtendedState(JFrame.MAXIMIZED_BOTH); // Tự động phóng to toàn màn hình
+        setExtendedState(JFrame.MAXIMIZED_BOTH); 
 
-        // ================= THANH MENU BAR =================
         JMenuBar menuBar = new JMenuBar();
         setJMenuBar(menuBar);
 
-        // 1. CỤC MENU "HỆ THỐNG"
         JMenu mnHeThong = new JMenu("Hệ thống");
         mnHeThong.setFont(new Font("Segoe UI", Font.BOLD, 14));
         menuBar.add(mnHeThong);
@@ -52,7 +50,6 @@ public class FrmTrangChu extends JFrame {
         mnHeThong.add(mniDangXuat);
         mnHeThong.add(mniThoat);
 
-        // 2. CỤC MENU "QUẢN LÝ DANH MỤC"
         JMenu mnQuanLy = new JMenu("Quản lý Danh mục");
         mnQuanLy.setFont(new Font("Segoe UI", Font.BOLD, 14));
         menuBar.add(mnQuanLy);
@@ -73,7 +70,6 @@ public class FrmTrangChu extends JFrame {
         mnQuanLy.add(mniGiangVien);
         mnQuanLy.add(mniLopChuyenNganh);
 
-        // 3. CỤC MENU "NGHIỆP VỤ - LỊCH DẠY"
         JMenu mnNghiepVu = new JMenu("Nghiệp vụ - Lịch dạy");
         mnNghiepVu.setFont(new Font("Segoe UI", Font.BOLD, 14));
         menuBar.add(mnNghiepVu);
@@ -85,7 +81,6 @@ public class FrmTrangChu extends JFrame {
         mnNghiepVu.addSeparator();
         mnNghiepVu.add(mniXemLich);
 
-        // 4. CỤC MENU "TÍNH LƯƠNG & BÁO CÁO"
         JMenu mnTinhLuong = new JMenu("Tính lương & Báo cáo");
         mnTinhLuong.setFont(new Font("Segoe UI", Font.BOLD, 14));
         menuBar.add(mnTinhLuong);
@@ -96,14 +91,12 @@ public class FrmTrangChu extends JFrame {
         mnTinhLuong.add(mniBangLuong);
         mnTinhLuong.add(mniThongKe);
 
-        // ================= GIAO DIỆN HIỂN THỊ CHÍNH =================
         contentPane = new JPanel();
         contentPane.setBackground(new Color(240, 248, 255));
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
         contentPane.setLayout(new BorderLayout(0, 0));
 
-        // Header chứa Lời chào và Đồng hồ
         JPanel pnlHeader = new JPanel();
         pnlHeader.setBackground(new Color(0, 102, 204));
         contentPane.add(pnlHeader, BorderLayout.NORTH);
@@ -129,26 +122,20 @@ public class FrmTrangChu extends JFrame {
         lblBanner.setHorizontalAlignment(SwingConstants.CENTER);
         contentPane.add(lblBanner, BorderLayout.CENTER);
 
-        // ================= CƠ CHẾ PHÂN QUYỀN =================
-        // Mặc định Admin toàn quyền, không cần xử lý gì thêm.
         
         if (quyen.equalsIgnoreCase("giaovu")) {
-            // Quyền Giáo vụ: Chỉ xài bảng lương và thống kê
-            mniTaiKhoan.setVisible(false);
-            mnQuanLy.setVisible(false); // Ẩn nguyên cụm menu Danh mục
-            mnNghiepVu.setVisible(false); // Ẩn nguyên cụm menu Nghiệp vụ
-        } 
-        else if (quyen.equalsIgnoreCase("canbo") || quyen.equalsIgnoreCase("giangvien")) {
-            // Quyền Cán bộ / Giảng viên: Chỉ xem lịch dạy
             mniTaiKhoan.setVisible(false);
             mnQuanLy.setVisible(false); 
-            mnTinhLuong.setVisible(false); // Ẩn nguyên cụm menu Tính lương
-            mniPhanCong.setVisible(false); // Ẩn phân công giảng dạy, chỉ để lại Xem lịch dạy
+            mnNghiepVu.setVisible(false); 
+        } 
+        else if (quyen.equalsIgnoreCase("canbo") || quyen.equalsIgnoreCase("giangvien")) {
+            mniTaiKhoan.setVisible(false);
+            mnQuanLy.setVisible(false); 
+            mnTinhLuong.setVisible(false); 
+            mniPhanCong.setVisible(false); 
         }
 
-        // ================= GẮN SỰ KIỆN NÚT BẤM =================
         
-        // 1. Hệ Thống 
         mniDoiMatKhau.addActionListener(e -> new gui.FrmDoiMatKhau(tenUser).setVisible(true));
         mniTaiKhoan.addActionListener(e -> new gui.FrmQuanLyTaiKhoan().setVisible(true));
         mniDangXuat.addActionListener(e -> {
@@ -157,7 +144,6 @@ public class FrmTrangChu extends JFrame {
         });
         mniThoat.addActionListener(e -> System.exit(0));
 
-        // 2. Quản Lý Danh Mục (Phần của Ân - package gd)
         mniKhoa.addActionListener(e -> new gd.QLKhoa().setVisible(true));
         mniHocKy.addActionListener(e -> new gd.QuanLyHocKy().setVisible(true));
         mniMonHoc.addActionListener(e -> new gd.QuanLyMonHoc().setVisible(true));
@@ -166,16 +152,13 @@ public class FrmTrangChu extends JFrame {
         mniLopChuyenNganh.addActionListener(e -> new gd.QuanLyLopChuyenNganh().setVisible(true));
         mniSinhVien.addActionListener(e -> new gd.QuanLySinhVien().setVisible(true));
 
-        // 3. Nghiệp Vụ - Lịch Dạy (Phần của Duy - package gui)
         mniPhanCong.addActionListener(e -> new gui.FrmPhanCong().setVisible(true));
         mniXemLich.addActionListener(e -> new gui.FrmXemLich(tenUser, quyen).setVisible(true));
 
-        // 4. Tính Lương & Báo Cáo (Phần của Duy - package gui)
         mniBangLuong.addActionListener(e -> new gui.FrmTinhLuong().setVisible(true));
         mniThongKe.addActionListener(e -> new gui.FrmThongKe().setVisible(true));
     }
 
-    // Luồng chạy đồng hồ thời gian thực
     private void chayDongHo() {
         Thread thread = new Thread() {
             public void run() {

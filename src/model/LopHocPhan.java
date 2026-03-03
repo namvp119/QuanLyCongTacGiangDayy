@@ -38,8 +38,7 @@ public class LopHocPhan {
         this.ngayKetThuc = ngayKetThuc;
     }
 
-    // ================= GETTER & SETTER =================
-
+    
     public String getMaLHP() { return maLHP; }
     public void setMaLHP(String maLHP) { this.maLHP = maLHP; }
 
