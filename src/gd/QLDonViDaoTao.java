@@ -35,13 +35,15 @@ public class QLDonViDaoTao extends JFrame {
 
     private void initUI() {
 
-        JPanel left = new JPanel(new BorderLayout());
+        setLayout(new BorderLayout());
+
+        JPanel topPanel = new JPanel(new BorderLayout());
 
         JLabel lblTitle = new JLabel("Thông tin chi tiết đơn vị đào tạo");
         lblTitle.setForeground(Color.BLUE);
         lblTitle.setFont(new Font("Arial", Font.BOLD, 16));
         lblTitle.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
-        left.add(lblTitle, BorderLayout.NORTH);
+        topPanel.add(lblTitle, BorderLayout.NORTH);
 
         JPanel form = new JPanel(new GridLayout(2,2,5,10));
         form.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
@@ -54,23 +56,23 @@ public class QLDonViDaoTao extends JFrame {
         form.add(new JLabel("Tên đơn vị (*)"));
         form.add(txtTen);
 
-        left.add(form, BorderLayout.CENTER);
+        topPanel.add(form, BorderLayout.CENTER);
 
         JPanel buttonPanel = new JPanel();
 
-        btnThem = new JButton("Thêm");
-        btnLuu = new JButton("Lưu");
+        btnThem = new JButton("Thêm");  
         btnSua = new JButton("Sửa");
         btnXoa = new JButton("Xóa");
+        btnLuu = new JButton("Lưu");
         btnThoat = new JButton("Thoát");
 
-        buttonPanel.add(btnThem);
-        buttonPanel.add(btnLuu);
+        buttonPanel.add(btnThem);    
         buttonPanel.add(btnSua);
         buttonPanel.add(btnXoa);
+        buttonPanel.add(btnLuu);
         buttonPanel.add(btnThoat);
 
-        left.add(buttonPanel, BorderLayout.SOUTH);
+        topPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         model = new DefaultTableModel();
         model.setColumnIdentifiers(new String[]{"Mã đơn vị", "Tên đơn vị"});
@@ -85,16 +87,9 @@ public class QLDonViDaoTao extends JFrame {
         border.setTitleColor(Color.BLUE);
         scroll.setBorder(border);
 
-        JSplitPane split = new JSplitPane(
-                JSplitPane.HORIZONTAL_SPLIT,
-                left,
-                scroll
-        );
-        split.setDividerLocation(350);
-
-        add(split);
+        add(topPanel, BorderLayout.NORTH);
+        add(scroll, BorderLayout.CENTER);
     }
-
     private void setFormEnabled(boolean enabled) {
         txtMa.setEditable(enabled);
         txtTen.setEditable(enabled);
