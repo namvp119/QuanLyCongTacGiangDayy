@@ -15,7 +15,7 @@ public class QLHeDaoTao extends JFrame {
     private JTable table;
     private DefaultTableModel model;
 
-    private JButton btnThem, btnLuu, btnSua, btnXoa, btnThoat;
+    private JButton btnThem, btnLuu, btnSua, btnXoa;
 
     private String mode = "";
 
@@ -23,7 +23,7 @@ public class QLHeDaoTao extends JFrame {
         setTitle("Quản lý hệ đào tạo");
         setSize(800, 500);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         initUI();
         loadData();
@@ -65,13 +65,11 @@ public class QLHeDaoTao extends JFrame {
         btnLuu = new JButton("Lưu");
         btnSua = new JButton("Sửa");
         btnXoa = new JButton("Xóa");
-        btnThoat = new JButton("Thoát");
 
         buttonPanel.add(btnThem);
         buttonPanel.add(btnLuu);
         buttonPanel.add(btnSua);
         buttonPanel.add(btnXoa);
-        buttonPanel.add(btnThoat);
 
         topPanel.add(buttonPanel, BorderLayout.SOUTH);
 
@@ -149,7 +147,6 @@ public class QLHeDaoTao extends JFrame {
 
         btnXoa.addActionListener(e -> deleteData());
 
-        btnThoat.addActionListener(e -> System.exit(0));
 
         table.getSelectionModel().addListSelectionListener(e -> showDetail());
     }

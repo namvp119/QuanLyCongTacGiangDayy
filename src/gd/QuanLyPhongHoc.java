@@ -15,16 +15,17 @@ public class QuanLyPhongHoc extends JFrame {
     private JTable table;
     private DefaultTableModel model;
 
-    private JButton btnThem, btnLuu, btnSua, btnXoa, btnThoat;
+    private JButton btnThem, btnLuu, btnSua, btnXoa;
 
     private String cheDo = ""; 
+    private JFrame parent;
 
     public QuanLyPhongHoc() {
 
         setTitle("Quản lý phòng học");
         setSize(950, 520);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout(10,10));
 
         JPanel leftPanel = new JPanel(new BorderLayout());
@@ -64,19 +65,16 @@ public class QuanLyPhongHoc extends JFrame {
         btnLuu = new JButton("Lưu");
         btnSua = new JButton("Sửa");
         btnXoa = new JButton("Xóa");
-        btnThoat = new JButton("Thoát");
 
         btnThem.setPreferredSize(size);
         btnLuu.setPreferredSize(size);
         btnSua.setPreferredSize(size);
         btnXoa.setPreferredSize(size);
-        btnThoat.setPreferredSize(size);
 
         buttonPanel.add(btnThem);
         buttonPanel.add(btnLuu);
         buttonPanel.add(btnSua);
         buttonPanel.add(btnXoa);
-        buttonPanel.add(btnThoat);
 
         leftPanel.add(buttonPanel, BorderLayout.CENTER);
         add(leftPanel, BorderLayout.WEST);
@@ -167,8 +165,6 @@ public class QuanLyPhongHoc extends JFrame {
                 }
             }
         });
-
-        btnThoat.addActionListener(e -> dispose());
 
         table.getSelectionModel().addListSelectionListener(e -> {
             int row = table.getSelectedRow();

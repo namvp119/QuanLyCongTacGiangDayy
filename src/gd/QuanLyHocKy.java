@@ -15,7 +15,7 @@ public class QuanLyHocKy extends JFrame {
     private JTable table;
     private DefaultTableModel model;
 
-    private JButton btnThem, btnLuu, btnSua, btnXoa, btnThoat;
+    private JButton btnThem, btnLuu, btnSua, btnXoa;
 
     private String cheDo = "";
 
@@ -24,7 +24,7 @@ public class QuanLyHocKy extends JFrame {
         setTitle("Quản lý học kỳ");
         setSize(1000, 550);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout(10,10));
 
         JPanel leftPanel = new JPanel(new BorderLayout());
@@ -70,20 +70,17 @@ public class QuanLyHocKy extends JFrame {
         btnLuu = new JButton("Lưu");
         btnSua = new JButton("Sửa");
         btnXoa = new JButton("Xóa");
-        btnThoat = new JButton("Thoát");
 
         btnThem.setPreferredSize(btnSize);
         btnLuu.setPreferredSize(btnSize);
         btnSua.setPreferredSize(btnSize);
         btnXoa.setPreferredSize(btnSize);
-        btnThoat.setPreferredSize(btnSize);
-
+        
         buttonPanel.add(btnThem);
         buttonPanel.add(btnLuu);
         buttonPanel.add(btnSua);
         buttonPanel.add(btnXoa);
-        buttonPanel.add(btnThoat);
-
+       
         leftPanel.add(buttonPanel, BorderLayout.CENTER);
         add(leftPanel, BorderLayout.WEST);
 
@@ -152,17 +149,7 @@ public class QuanLyHocKy extends JFrame {
             }
         });
 
-        btnThoat.addActionListener(e -> {
-            int confirm = JOptionPane.showConfirmDialog(
-                    this,
-                    "Bạn có chắc muốn thoát?",
-                    "Xác nhận",
-                    JOptionPane.YES_NO_OPTION
-            );
-            if (confirm == JOptionPane.YES_OPTION) {
-                dispose();
-            }
-        });
+       
 
         table.getSelectionModel().addListSelectionListener(e -> {
             int row = table.getSelectedRow();

@@ -20,7 +20,7 @@ public class QuanLyLopChuyenNganh extends JFrame {
     JTable table;
     DefaultTableModel model;
 
-    JButton btnThem, btnLuu, btnSua, btnXoa, btnThoat;
+    JButton btnThem, btnLuu, btnSua, btnXoa;
 
     LopChuyenNganhDAO dao = new LopChuyenNganhDAO();
 
@@ -31,7 +31,7 @@ public class QuanLyLopChuyenNganh extends JFrame {
         setTitle("Quản lý lớp chuyên ngành");
         setSize(1100,600);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         initUI();
         loadCombo();
@@ -81,14 +81,14 @@ public class QuanLyLopChuyenNganh extends JFrame {
         btnLuu = new JButton("Lưu");
         btnSua = new JButton("Sửa");
         btnXoa = new JButton("Xóa");
-        btnThoat = new JButton("Thoát");
+       
 
         JPanel pBtn = new JPanel();
         pBtn.add(btnThem);
         pBtn.add(btnLuu);
         pBtn.add(btnSua);
         pBtn.add(btnXoa);
-        pBtn.add(btnThoat);
+       
 
         JPanel mainLeft = new JPanel(new BorderLayout());
         mainLeft.add(left,BorderLayout.CENTER);
@@ -124,8 +124,6 @@ public class QuanLyLopChuyenNganh extends JFrame {
         btnLuu.addActionListener(e -> saveData());
 
         btnXoa.addActionListener(e -> deleteData());
-
-        btnThoat.addActionListener(e -> dispose());
 
         table.getSelectionModel().addListSelectionListener(e -> fillForm());
     }
