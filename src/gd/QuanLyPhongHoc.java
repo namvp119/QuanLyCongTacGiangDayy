@@ -17,6 +17,8 @@ public class QuanLyPhongHoc extends JFrame {
 
     private JButton btnThem, btnLuu, btnSua, btnXoa, btnThoat;
 
+    private String cheDo = ""; 
+
     public QuanLyPhongHoc() {
 
         setTitle("Quản lý phòng học");
@@ -25,7 +27,6 @@ public class QuanLyPhongHoc extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout(10,10));
 
-        // ===== PANEL TRÁI =====
         JPanel leftPanel = new JPanel(new BorderLayout());
         leftPanel.setBorder(BorderFactory.createTitledBorder("Thông tin chi tiết phòng học"));
         leftPanel.setPreferredSize(new Dimension(420,0));
@@ -56,7 +57,6 @@ public class QuanLyPhongHoc extends JFrame {
 
         leftPanel.add(formPanel, BorderLayout.NORTH);
 
-        // ===== BUTTON PANEL =====
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 15));
         Dimension size = new Dimension(90,35);
 
@@ -79,46 +79,68 @@ public class QuanLyPhongHoc extends JFrame {
         buttonPanel.add(btnThoat);
 
         leftPanel.add(buttonPanel, BorderLayout.CENTER);
-
         add(leftPanel, BorderLayout.WEST);
 
-        // ===== TABLE =====
         model = new DefaultTableModel(
                 new String[]{"Mã phòng","Tên phòng","Tình trạng"},0);
 
         table = new JTable(model);
         JScrollPane scroll = new JScrollPane(table);
         scroll.setBorder(BorderFactory.createTitledBorder("Danh sách phòng"));
-
         add(scroll, BorderLayout.CENTER);
 
         loadData();
+        setFormEnabled(false);
+        btnLuu.setEnabled(false);
 
-        // ===== EVENTS =====
-
-        btnThem.addActionListener(e -> clearForm());
+        btnThem.addActionListener(e -> {
+            cheDo = "THEM";
+            clearForm();
+            setFormEnabled(true);
+            btnLuu.setEnabled(true);
+            txtMa.setEditable(true);
+        });
 
         btnLuu.addActionListener(e -> {
+
+            if (cheDo.equals("")) return;
+
             PhongHoc ph = getForm();
-            if (PhongHocDAO.tonTai(ph.getMaPhong())) {
-                JOptionPane.showMessageDialog(this,"Mã đã tồn tại!");
-                return;
+
+            if (cheDo.equals("THEM")) {
+
+                if (PhongHocDAO.tonTai(ph.getMaPhong())) {
+                    JOptionPane.showMessageDialog(this,"Mã đã tồn tại!");
+                    return;
+                }
+
+                if (PhongHocDAO.them(ph)) {
+                    JOptionPane.showMessageDialog(this,"Thêm thành công");
+                }
+
+            } else if (cheDo.equals("SUA")) {
+
+                if (PhongHocDAO.sua(ph)) {
+                    JOptionPane.showMessageDialog(this,"Sửa thành công");
+                }
             }
-            if (PhongHocDAO.them(ph)) {
-                JOptionPane.showMessageDialog(this,"Thêm thành công");
-                loadData();
-                clearForm();
-            }
+
+            loadData();
+            clearForm();
+            setFormEnabled(false);
+            btnLuu.setEnabled(false);
+            cheDo = "";
         });
 
         btnSua.addActionListener(e -> {
-            PhongHoc ph = getForm();
-            if (PhongHocDAO.sua(ph)) {
-                JOptionPane.showMessageDialog(this,"Sửa thành công");
-                loadData();
+            int row = table.getSelectedRow();
+            if (row >= 0) {
+                cheDo = "SUA";
+                setFormEnabled(true);
+                btnLuu.setEnabled(true);
+                txtMa.setEditable(false);
             }
         });
-
         btnXoa.addActionListener(e -> {
             int row = table.getSelectedRow();
             if (row >= 0) {
@@ -130,17 +152,7 @@ public class QuanLyPhongHoc extends JFrame {
             }
         });
 
-        btnThoat.addActionListener(e -> {
-            int confirm = JOptionPane.showConfirmDialog(
-                    this,
-                    "Bạn có chắc muốn thoát?",
-                    "Xác nhận",
-                    JOptionPane.YES_NO_OPTION
-            );
-            if (confirm == JOptionPane.YES_OPTION) {
-                dispose();
-            }
-        });
+        btnThoat.addActionListener(e -> dispose());
 
         table.getSelectionModel().addListSelectionListener(e -> {
             int row = table.getSelectedRow();
@@ -155,7 +167,6 @@ public class QuanLyPhongHoc extends JFrame {
     private void loadData() {
         model.setRowCount(0);
         ArrayList<PhongHoc> list = PhongHocDAO.layDanhSach();
-
         for (PhongHoc ph : list) {
             model.addRow(new Object[]{
                     ph.getMaPhong(),
@@ -177,6 +188,12 @@ public class QuanLyPhongHoc extends JFrame {
         txtMa.setText("");
         txtTen.setText("");
         cbTinhTrang.setSelectedIndex(0);
+    }
+
+    private void setFormEnabled(boolean enabled) {
+        txtMa.setEnabled(enabled);
+        txtTen.setEnabled(enabled);
+        cbTinhTrang.setEnabled(enabled);
     }
 
     public static void main(String[] args) {

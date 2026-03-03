@@ -11,8 +11,6 @@ public class LopChuyenNganh {
     private String maCB;
     private String maKhoa;
     private int soLuongSV;
-
-    // dùng để hiển thị tên khi join
     private String tenDonVi;
     private String tenHe;
     private String tenCB;

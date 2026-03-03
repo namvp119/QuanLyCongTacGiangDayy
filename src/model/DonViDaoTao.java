@@ -27,4 +27,8 @@ public class DonViDaoTao {
     public void setTenDonVi(String tenDonVi) {
         this.tenDonVi = tenDonVi;
     }
+    @Override
+    public String toString() {
+        return tenDonVi;   
+    }
 }

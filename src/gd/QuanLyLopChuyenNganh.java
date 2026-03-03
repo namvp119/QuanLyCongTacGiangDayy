@@ -2,6 +2,7 @@ package gd;
 
 import dao.*;
 import model.*;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -19,11 +20,13 @@ public class QuanLyLopChuyenNganh extends JFrame {
     JTable table;
     DefaultTableModel model;
 
+    JButton btnThem, btnLuu, btnSua, btnXoa, btnThoat;
+
     LopChuyenNganhDAO dao = new LopChuyenNganhDAO();
 
     boolean isInsert = false;
 
-    public QuanLyLopChuyenNganh(){
+    public QuanLyLopChuyenNganh() {
 
         setTitle("Quản lý lớp chuyên ngành");
         setSize(1100,600);
@@ -34,6 +37,19 @@ public class QuanLyLopChuyenNganh extends JFrame {
         loadCombo();
         loadTable();
         setButtonState(true);
+    }
+    private void enableForm(boolean enable){
+
+        txtMa.setEnabled(enable && isInsert); 
+        txtTen.setEnabled(enable);
+        txtNganh.setEnabled(enable);
+        txtSoLuong.setEnabled(enable);
+
+        cboTinhTrang.setEnabled(enable);
+        cboDonVi.setEnabled(enable);
+        cboHe.setEnabled(enable);
+        cboKhoa.setEnabled(enable);
+        cboCanBo.setEnabled(enable);
     }
 
     private void initUI(){
@@ -61,11 +77,11 @@ public class QuanLyLopChuyenNganh extends JFrame {
         left.add(new JLabel("Cán bộ (*)")); left.add(cboCanBo);
         left.add(new JLabel("Số lượng SV (*)")); left.add(txtSoLuong);
 
-        JButton btnThem = new JButton("Thêm");
-        JButton btnLuu = new JButton("Lưu");
-        JButton btnSua = new JButton("Sửa");
-        JButton btnXoa = new JButton("Xóa");
-        JButton btnThoat = new JButton("Thoát");
+        btnThem = new JButton("Thêm");
+        btnLuu = new JButton("Lưu");
+        btnSua = new JButton("Sửa");
+        btnXoa = new JButton("Xóa");
+        btnThoat = new JButton("Thoát");
 
         JPanel pBtn = new JPanel();
         pBtn.add(btnThem);
@@ -87,20 +103,25 @@ public class QuanLyLopChuyenNganh extends JFrame {
         add(mainLeft,BorderLayout.WEST);
         add(new JScrollPane(table),BorderLayout.CENTER);
 
-        // ====== EVENTS ======
-
+        
         btnThem.addActionListener(e -> {
             clearForm();
             isInsert = true;
+            txtMa.setEnabled(true);
+            setButtonState(false);
+        });
+
+        btnSua.addActionListener(e -> {
+            if(table.getSelectedRow() < 0){
+                JOptionPane.showMessageDialog(this,"Chọn lớp cần sửa");
+                return;
+            }
+            isInsert = false;
+            txtMa.setEnabled(false);
             setButtonState(false);
         });
 
         btnLuu.addActionListener(e -> saveData());
-
-        btnSua.addActionListener(e -> {
-            isInsert = false;
-            setButtonState(false);
-        });
 
         btnXoa.addActionListener(e -> deleteData());
 
@@ -109,18 +130,25 @@ public class QuanLyLopChuyenNganh extends JFrame {
         table.getSelectionModel().addListSelectionListener(e -> fillForm());
     }
 
-
     private void loadCombo(){
 
         cboDonVi.removeAllItems();
         for(DonViDaoTao dv : DonViDaoTaoDAO.layDanhSach())
             cboDonVi.addItem(dv);
 
+        cboHe.removeAllItems();
+        for(HeDaoTao he : new HeDaoTaoDAO().layDanhSach())
+            cboHe.addItem(he);
+
+        cboKhoa.removeAllItems();
+        for(Khoa k : new KhoaDAO().layDanhSachKhoa())
+            cboKhoa.addItem(k);
+
         cboCanBo.removeAllItems();
-        CanBoGiangDayDAO cbDAO = new CanBoGiangDayDAO();
-        for(CanBoGiangDay cb : cbDAO.getAll())
+        for(CanBoGiangDay cb : new CanBoGiangDayDAO().getAll())
             cboCanBo.addItem(cb);
     }
+
     private void loadTable(){
 
         model.setRowCount(0);
@@ -176,13 +204,21 @@ public class QuanLyLopChuyenNganh extends JFrame {
             loadTable();
             JOptionPane.showMessageDialog(this,"Thành công");
             setButtonState(true);
+        } else {
+            JOptionPane.showMessageDialog(this,"Thất bại");
         }
     }
 
     private void deleteData(){
 
+        if(table.getSelectedRow() < 0){
+            JOptionPane.showMessageDialog(this,"Chọn lớp cần xóa");
+            return;
+        }
+
         if(dao.delete(txtMa.getText())){
             loadTable();
+            clearForm();
             JOptionPane.showMessageDialog(this,"Xóa thành công");
         }
     }
@@ -194,7 +230,7 @@ public class QuanLyLopChuyenNganh extends JFrame {
             return false;
         }
 
-        if(txtTen.getText().isEmpty()){
+        if(txtTen.getText().trim().isEmpty()){
             JOptionPane.showMessageDialog(this,"Tên lớp không được rỗng");
             return false;
         }
@@ -217,8 +253,13 @@ public class QuanLyLopChuyenNganh extends JFrame {
     }
 
     private void setButtonState(boolean normal){
-        // normal = true → trạng thái ban đầu
-        // normal = false → đang thêm/sửa
+
+        btnThem.setEnabled(normal);
+        btnSua.setEnabled(normal);
+        btnXoa.setEnabled(normal);
+
+        btnLuu.setEnabled(!normal);
+        enableForm(!normal); 
     }
 
     public static void main(String[] args) {

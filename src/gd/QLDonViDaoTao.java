@@ -18,6 +18,7 @@ public class QLDonViDaoTao extends JFrame {
     private JButton btnThem, btnLuu, btnSua, btnXoa, btnThoat;
 
     private boolean isThem = false;
+    private boolean isSua = false;
 
     public QLDonViDaoTao() {
         setTitle("Quản lý đơn vị đào tạo");
@@ -27,6 +28,8 @@ public class QLDonViDaoTao extends JFrame {
 
         initUI();
         loadData();
+        setFormEnabled(false);
+        btnLuu.setEnabled(false);
         addEvents();
     }
 
@@ -40,18 +43,15 @@ public class QLDonViDaoTao extends JFrame {
         lblTitle.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
         left.add(lblTitle, BorderLayout.NORTH);
 
-        JPanel form = new JPanel(new GridLayout(2,3,5,10));
+        JPanel form = new JPanel(new GridLayout(2,2,5,10));
         form.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 
         txtMa = new JTextField();
         txtTen = new JTextField();
 
         form.add(new JLabel("Mã đơn vị (*)"));
-        form.add(new JLabel(""));
         form.add(txtMa);
-
         form.add(new JLabel("Tên đơn vị (*)"));
-        form.add(new JLabel(""));
         form.add(txtTen);
 
         left.add(form, BorderLayout.CENTER);
@@ -71,8 +71,6 @@ public class QLDonViDaoTao extends JFrame {
         buttonPanel.add(btnThoat);
 
         left.add(buttonPanel, BorderLayout.SOUTH);
-
-        // ===== Right Table =====
 
         model = new DefaultTableModel();
         model.setColumnIdentifiers(new String[]{"Mã đơn vị", "Tên đơn vị"});
@@ -97,11 +95,14 @@ public class QLDonViDaoTao extends JFrame {
         add(split);
     }
 
+    private void setFormEnabled(boolean enabled) {
+        txtMa.setEditable(enabled);
+        txtTen.setEditable(enabled);
+    }
+
     private void loadData() {
         model.setRowCount(0);
-
         ArrayList<DonViDaoTao> list = DonViDaoTaoDAO.layDanhSach();
-
         for (DonViDaoTao dv : list) {
             model.addRow(new Object[]{
                     dv.getMaDonVi(),
@@ -109,70 +110,32 @@ public class QLDonViDaoTao extends JFrame {
             });
         }
     }
-    private void insertData() {
-
-        if (txtMa.getText().isEmpty() || txtTen.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this,"Nhập đầy đủ dữ liệu!");
-            return;
-        }
-
-        DonViDaoTao dv = new DonViDaoTao(
-                txtMa.getText().trim(),
-                txtTen.getText().trim()
-        );
-
-        if (DonViDaoTaoDAO.tonTai(dv.getMaDonVi())) {
-            JOptionPane.showMessageDialog(this,"Mã đã tồn tại!");
-            return;
-        }
-
-        if (DonViDaoTaoDAO.them(dv)) {
-            JOptionPane.showMessageDialog(this,"Thêm thành công!");
-            loadData();
-            clearForm();
-        } else {
-            JOptionPane.showMessageDialog(this,"Thêm thất bại!");
-        }
-    }
-    private void updateData() {
-
-        int row = table.getSelectedRow();
-        if (row == -1) {
-            JOptionPane.showMessageDialog(this,"Chọn dòng cần sửa!");
-            return;
-        }
-
-        if (txtTen.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this,"Tên không được rỗng!");
-            return;
-        }
-
-        DonViDaoTao dv = new DonViDaoTao(
-                txtMa.getText().trim(),
-                txtTen.getText().trim()
-        );
-
-        if (DonViDaoTaoDAO.sua(dv)) {
-            JOptionPane.showMessageDialog(this,"Cập nhật thành công!");
-            loadData();
-        } else {
-            JOptionPane.showMessageDialog(this,"Cập nhật thất bại!");
-        }
-    }
 
     private void addEvents() {
 
-        // THÊM → chỉ clear form
         btnThem.addActionListener(e -> {
+            isThem = true;
+            isSua = false;
             clearForm();
-            txtMa.setEditable(true);
+            setFormEnabled(true);
+            txtMa.requestFocus();
+            btnLuu.setEnabled(true);
         });
 
-        // LƯU → chỉ dùng cho thêm mới
-        btnLuu.addActionListener(e -> insertData());
+        btnSua.addActionListener(e -> {
+            int row = table.getSelectedRow();
+            if (row == -1) {
+                JOptionPane.showMessageDialog(this,"Chọn dòng cần sửa!");
+                return;
+            }
+            isSua = true;
+            isThem = false;
+            setFormEnabled(true);
+            txtMa.setEditable(false);
+            btnLuu.setEnabled(true);
+        });
 
-        // SỬA → update ngay
-        btnSua.addActionListener(e -> updateData());
+        btnLuu.addActionListener(e -> saveData());
 
         btnXoa.addActionListener(e -> deleteData());
 
@@ -180,6 +143,7 @@ public class QLDonViDaoTao extends JFrame {
 
         table.getSelectionModel().addListSelectionListener(e -> showDetail());
     }
+
     private void saveData() {
 
         if (txtMa.getText().isEmpty() || txtTen.getText().isEmpty()) {
@@ -192,17 +156,28 @@ public class QLDonViDaoTao extends JFrame {
                 txtTen.getText().trim()
         );
 
-        boolean result;
+        boolean result = false;
 
-        if (DonViDaoTaoDAO.tonTai(dv.getMaDonVi())) {
-            result = DonViDaoTaoDAO.sua(dv);
-        } else {
+        if (isThem) {
+            if (DonViDaoTaoDAO.tonTai(dv.getMaDonVi())) {
+                JOptionPane.showMessageDialog(this,"Mã đã tồn tại!");
+                return;
+            }
             result = DonViDaoTaoDAO.them(dv);
+        }
+
+        if (isSua) {
+            result = DonViDaoTaoDAO.sua(dv);
         }
 
         if (result) {
             JOptionPane.showMessageDialog(this,"Thành công!");
             loadData();
+            clearForm();
+            setFormEnabled(false);
+            btnLuu.setEnabled(false);
+            isThem = false;
+            isSua = false;
         } else {
             JOptionPane.showMessageDialog(this,"Thất bại!");
         }
@@ -218,6 +193,7 @@ public class QLDonViDaoTao extends JFrame {
         if (DonViDaoTaoDAO.xoa(ma)) {
             JOptionPane.showMessageDialog(this,"Đã xóa!");
             loadData();
+            clearForm();
         }
     }
 

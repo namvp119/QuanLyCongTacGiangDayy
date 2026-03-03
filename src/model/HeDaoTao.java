@@ -28,4 +28,8 @@ public class HeDaoTao {
     public void setTenHDT(String tenHDT) {
         this.tenHDT = tenHDT;
     }
+    @Override
+    public String toString() {
+        return this.getTenHDT();   
+    }
 }

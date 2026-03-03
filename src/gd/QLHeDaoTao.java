@@ -17,6 +17,8 @@ public class QLHeDaoTao extends JFrame {
 
     private JButton btnThem, btnLuu, btnSua, btnXoa, btnThoat;
 
+    private String mode = "";
+
     public QLHeDaoTao() {
         setTitle("Quản lý hệ đào tạo");
         setSize(800, 500);
@@ -26,6 +28,7 @@ public class QLHeDaoTao extends JFrame {
         initUI();
         loadData();
         addEvents();
+        setDefaultState();
     }
 
     private void initUI() {
@@ -93,38 +96,61 @@ public class QLHeDaoTao extends JFrame {
     }
 
     private void loadData() {
-
         try {
             model.setRowCount(0);
-
             ArrayList<HeDaoTao> list = HeDaoTaoDAO.layDanhSach();
-
-            System.out.println("Số dòng lấy được: " + list.size());
-
             for (HeDaoTao hdt : list) {
                 model.addRow(new Object[]{
                         hdt.getMaHDT(),
                         hdt.getTenHDT()
                 });
             }
-
-            model.fireTableDataChanged();   // đảm bảo table refresh
-
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    private void setDefaultState() {
+        txtMa.setText("");
+        txtTen.setText("");
+        txtMa.setEditable(false);
+        txtTen.setEditable(false);
+        btnLuu.setEnabled(false);
+        mode = "";
+    }
+
+    private void setAddState() {
+        txtMa.setText("");
+        txtTen.setText("");
+        txtMa.setEditable(true);
+        txtTen.setEditable(true);
+        btnLuu.setEnabled(true);
+        mode = "ADD";
+        txtMa.requestFocus();
+    }
+
+    private void setEditState() {
+        txtMa.setEditable(false);
+        txtTen.setEditable(true);
+        btnLuu.setEnabled(true);
+        mode = "EDIT";
+        txtTen.requestFocus();
+    }
+
     private void addEvents() {
 
-        btnThem.addActionListener(e -> {
-            txtMa.setText("");
-            txtTen.setText("");
-            txtMa.setEditable(true);
+        btnThem.addActionListener(e -> setAddState());
+
+        btnSua.addActionListener(e -> {
+            int row = table.getSelectedRow();
+            if (row == -1) {
+                JOptionPane.showMessageDialog(this,"Chọn dòng cần sửa!");
+                return;
+            }
+            setEditState();
         });
 
-        btnLuu.addActionListener(e -> insertData());
-
-        btnSua.addActionListener(e -> updateData());
+        btnLuu.addActionListener(e -> saveData());
 
         btnXoa.addActionListener(e -> deleteData());
 
@@ -133,49 +159,38 @@ public class QLHeDaoTao extends JFrame {
         table.getSelectionModel().addListSelectionListener(e -> showDetail());
     }
 
-    private void insertData() {
+    private void saveData() {
 
-        if (txtMa.getText().isEmpty() || txtTen.getText().isEmpty()) {
+        String ma = txtMa.getText().trim();
+        String ten = txtTen.getText().trim();
+
+        if (ma.isEmpty() || ten.isEmpty()) {
             JOptionPane.showMessageDialog(this,"Nhập đầy đủ dữ liệu!");
             return;
         }
 
-        HeDaoTao hdt = new HeDaoTao(
-                txtMa.getText().trim(),
-                txtTen.getText().trim()
-        );
+        HeDaoTao hdt = new HeDaoTao(ma, ten);
+        boolean result = false;
 
-        if (HeDaoTaoDAO.tonTai(hdt.getMaHDT())) {
-            JOptionPane.showMessageDialog(this,"Mã đã tồn tại!");
-            return;
+        if (mode.equals("ADD")) {
+
+            if (HeDaoTaoDAO.tonTai(ma)) {
+                JOptionPane.showMessageDialog(this,"Mã đã tồn tại!");
+                return;
+            }
+
+            result = HeDaoTaoDAO.them(hdt);
+
+        } else if (mode.equals("EDIT")) {
+            result = HeDaoTaoDAO.sua(hdt);
         }
 
-        if (HeDaoTaoDAO.them(hdt)) {
-            JOptionPane.showMessageDialog(this,"Thêm thành công!");
+        if (result) {
+            JOptionPane.showMessageDialog(this,"Thành công!");
             loadData();
+            setDefaultState();
         } else {
-            JOptionPane.showMessageDialog(this,"Thêm thất bại!");
-        }
-    }
-
-    private void updateData() {
-
-        int row = table.getSelectedRow();
-        if (row == -1) {
-            JOptionPane.showMessageDialog(this,"Chọn dòng cần sửa!");
-            return;
-        }
-
-        HeDaoTao hdt = new HeDaoTao(
-                txtMa.getText().trim(),
-                txtTen.getText().trim()
-        );
-
-        if (HeDaoTaoDAO.sua(hdt)) {
-            JOptionPane.showMessageDialog(this,"Cập nhật thành công!");
-            loadData();
-        } else {
-            JOptionPane.showMessageDialog(this,"Cập nhật thất bại!");
+            JOptionPane.showMessageDialog(this,"Thất bại!");
         }
     }
 
@@ -184,11 +199,19 @@ public class QLHeDaoTao extends JFrame {
         int row = table.getSelectedRow();
         if (row == -1) return;
 
+        int confirm = JOptionPane.showConfirmDialog(this,
+                "Bạn có chắc muốn xóa?",
+                "Xác nhận",
+                JOptionPane.YES_NO_OPTION);
+
+        if (confirm != JOptionPane.YES_OPTION) return;
+
         String ma = model.getValueAt(row,0).toString();
 
         if (HeDaoTaoDAO.xoa(ma)) {
             JOptionPane.showMessageDialog(this,"Đã xóa!");
             loadData();
+            setDefaultState();
         }
     }
 
@@ -199,7 +222,6 @@ public class QLHeDaoTao extends JFrame {
 
         txtMa.setText(model.getValueAt(row,0).toString());
         txtTen.setText(model.getValueAt(row,1).toString());
-        txtMa.setEditable(false);
     }
 
     public static void main(String[] args) {

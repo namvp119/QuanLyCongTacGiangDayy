@@ -29,6 +29,6 @@ public class Khoa {
     }
     @Override
     public String toString() {
-        return tenKhoa;
+        return this.getTenKhoa();
     }
 }

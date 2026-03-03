@@ -13,6 +13,8 @@ public class QLKhoa extends JFrame {
     private JList<String> listKhoa;
     private DefaultListModel<String> listModel;
 
+    private String mode = "";
+
     public QLKhoa() {
 
         setTitle("Quản lý khoa");
@@ -76,6 +78,7 @@ public class QLKhoa extends JFrame {
 
         xuLySuKien();
         loadData();
+        setDefaultState();
     }
 
     private void loadData() {
@@ -86,12 +89,43 @@ public class QLKhoa extends JFrame {
         }
     }
 
+    private void setDefaultState() {
+        txtMaKhoa.setText("");
+        txtTenKhoa.setText("");
+        txtMaKhoa.setEditable(false);
+        txtTenKhoa.setEditable(false);
+        btnLuu.setEnabled(false);
+        mode = "";
+    }
+
+    private void setAddState() {
+        txtMaKhoa.setText("");
+        txtTenKhoa.setText("");
+        txtMaKhoa.setEditable(true);
+        txtTenKhoa.setEditable(true);
+        btnLuu.setEnabled(true);
+        mode = "ADD";
+        txtMaKhoa.requestFocus();
+    }
+
+    private void setEditState() {
+        txtMaKhoa.setEditable(false);
+        txtTenKhoa.setEditable(true);
+        btnLuu.setEnabled(true);
+        mode = "EDIT";
+        txtTenKhoa.requestFocus();
+    }
+
     private void xuLySuKien() {
 
-        btnThem.addActionListener(e -> {
-            txtMaKhoa.setText("");
-            txtTenKhoa.setText("");
-            txtMaKhoa.requestFocus();
+        btnThem.addActionListener(e -> setAddState());
+
+        btnSua.addActionListener(e -> {
+            if (txtMaKhoa.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Chọn khoa cần sửa!");
+                return;
+            }
+            setEditState();
         });
 
         btnLuu.addActionListener(e -> {
@@ -105,32 +139,20 @@ public class QLKhoa extends JFrame {
             }
 
             Khoa k = new Khoa(ma, ten);
+            boolean result = false;
 
-            if (KhoaDAO.themKhoa(k)) {
-                JOptionPane.showMessageDialog(this, "Thêm thành công!");
-                loadData();
-            } else {
-                JOptionPane.showMessageDialog(this, "Thêm thất bại!");
-            }
-        });
-
-        btnSua.addActionListener(e -> {
-
-            String ma = txtMaKhoa.getText().trim();
-            String ten = txtTenKhoa.getText().trim();
-
-            if (ma.isEmpty() || ten.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Nhập đầy đủ thông tin!");
-                return;
+            if (mode.equals("ADD")) {
+                result = KhoaDAO.themKhoa(k);
+            } else if (mode.equals("EDIT")) {
+                result = KhoaDAO.suaKhoa(k);
             }
 
-            Khoa k = new Khoa(ma, ten);
-
-            if (KhoaDAO.suaKhoa(k)) {
-                JOptionPane.showMessageDialog(this, "Cập nhật thành công!");
+            if (result) {
+                JOptionPane.showMessageDialog(this, "Thành công!");
                 loadData();
+                setDefaultState();
             } else {
-                JOptionPane.showMessageDialog(this, "Cập nhật thất bại!");
+                JOptionPane.showMessageDialog(this, "Thất bại!");
             }
         });
 
@@ -143,12 +165,17 @@ public class QLKhoa extends JFrame {
                 return;
             }
 
+            int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn xóa?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+
+            if (confirm != JOptionPane.YES_OPTION) return;
+
             String item = listKhoa.getSelectedValue();
             String ma = item.split(" - ")[0];
 
             if (KhoaDAO.xoaKhoa(ma)) {
                 JOptionPane.showMessageDialog(this, "Xóa thành công!");
                 loadData();
+                setDefaultState();
             } else {
                 JOptionPane.showMessageDialog(this, "Xóa thất bại!");
             }

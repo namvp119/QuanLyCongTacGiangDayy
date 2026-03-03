@@ -20,7 +20,9 @@ public class QuanLyGiangVien extends JFrame {
     private JTable table;
     private DefaultTableModel model;
 
-    private String mode = ""; 
+    private JButton btnThem, btnSua, btnXoa, btnLuu, btnThoat;
+
+    private String mode = "";
 
     private CanBoGiangDayDAO dao = new CanBoGiangDayDAO();
     private KhoaDAO khoaDAO = new KhoaDAO();
@@ -35,6 +37,8 @@ public class QuanLyGiangVien extends JFrame {
         initUI();
         loadCombo();
         loadTable();
+        setFormEnabled(false);
+        btnLuu.setEnabled(false);
     }
 
     private void initUI() {
@@ -68,11 +72,11 @@ public class QuanLyGiangVien extends JFrame {
         cboChucDanh = new JComboBox<>();
         addComponent(left,"Chức danh (*)",cboChucDanh,y); y+=50;
 
-        JButton btnThem = new JButton("Thêm");
-        JButton btnSua = new JButton("Sửa");
-        JButton btnXoa = new JButton("Xóa");
-        JButton btnLuu = new JButton("Lưu");
-        JButton btnThoat = new JButton("Thoát");
+        btnThem = new JButton("Thêm");
+        btnSua = new JButton("Sửa");
+        btnXoa = new JButton("Xóa");
+        btnLuu = new JButton("Lưu");
+        btnThoat = new JButton("Thoát");
 
         btnThem.setBounds(30,y,80,30);
         btnSua.setBounds(120,y,80,30);
@@ -86,11 +90,9 @@ public class QuanLyGiangVien extends JFrame {
         left.add(btnLuu);
         left.add(btnThoat);
 
-        btnLuu.setEnabled(false);
-
-        // TABLE
         model = new DefaultTableModel(
                 new String[]{"MSCB","Họ tên","Giới tính","Ngày sinh","Khoa","Chức danh"},0);
+
         table = new JTable(model);
 
         JSplitPane split = new JSplitPane(
@@ -104,18 +106,22 @@ public class QuanLyGiangVien extends JFrame {
         btnThem.addActionListener(e -> {
             clearForm();
             mode = "ADD";
+            setFormEnabled(true);
+            txtMa.setEditable(true);
             btnLuu.setEnabled(true);
         });
 
         btnSua.addActionListener(e -> {
+            int r = table.getSelectedRow();
+            if(r==-1) return;
             mode = "UPDATE";
+            setFormEnabled(true);
+            txtMa.setEditable(false);
             btnLuu.setEnabled(true);
         });
 
-        btnLuu.addActionListener(e -> saveData(btnLuu));
-
+        btnLuu.addActionListener(e -> saveData());
         btnXoa.addActionListener(e -> deleteData());
-
         btnThoat.addActionListener(e -> dispose());
 
         table.addMouseListener(new MouseAdapter() {
@@ -142,9 +148,8 @@ public class QuanLyGiangVien extends JFrame {
     }
 
     private void loadCombo(){
-
         cboKhoa.removeAllItems();
-        for(Khoa k : KhoaDAO.layDanhSachKhoa())
+        for(Khoa k : khoaDAO.layDanhSachKhoa())
             cboKhoa.addItem(k);
 
         cboChucDanh.removeAllItems();
@@ -153,25 +158,35 @@ public class QuanLyGiangVien extends JFrame {
     }
 
     private void loadTable(){
-
         model.setRowCount(0);
-
         List<CanBoGiangDay> list = dao.getAll();
-
         for(CanBoGiangDay cb : list){
             model.addRow(new Object[]{
                     cb.getMscb(),
                     cb.getHoTen(),
                     cb.getGioiTinh(),
                     cb.getNgaySinh(),
+                    cb.getTenKhoa(),
+                    cb.getTenCD(),
             });
         }
     }
 
-    private void saveData(JButton btnLuu){
+    private void saveData(){
+
+        if(txtMa.getText().trim().length()!=6){
+            JOptionPane.showMessageDialog(this,"Mã cán bộ phải đủ 6 ký tự!");
+            return;
+        }
+
+        if(!txtEmail.getText().contains("@")){
+            JOptionPane.showMessageDialog(this,"Email không hợp lệ!");
+            return;
+        }
 
         try{
             CanBoGiangDay cb = new CanBoGiangDay();
+
             cb.setMscb(txtMa.getText());
             cb.setHoTen(txtTen.getText());
             cb.setGioiTinh(cboGioiTinh.getSelectedItem().toString());
@@ -194,26 +209,15 @@ public class QuanLyGiangVien extends JFrame {
             if(result){
                 JOptionPane.showMessageDialog(this,"Thành công!");
                 loadTable();
+                setFormEnabled(false);
                 btnLuu.setEnabled(false);
+                mode = "";
             }else{
                 JOptionPane.showMessageDialog(this,"Thất bại!");
             }
 
         }catch(Exception ex){
-        	if(txtMa.getText().trim().length() != 6){
-        	    JOptionPane.showMessageDialog(this,"Mã cán bộ phải đủ 6 ký tự!");
-        	    return;
-        	}
-
-        	if(!txtEmail.getText().contains("@")){
-        	    JOptionPane.showMessageDialog(this,"Email không hợp lệ!");
-        	    return;
-        	}
-
-        	if(cboChucDanh.getSelectedItem() == null){
-        	    JOptionPane.showMessageDialog(this,"Phải chọn chức danh!");
-        	    return;
-        	}
+            ex.printStackTrace();
         }
     }
 
@@ -235,6 +239,25 @@ public class QuanLyGiangVien extends JFrame {
 
         txtMa.setText(model.getValueAt(r,0).toString());
         txtTen.setText(model.getValueAt(r,1).toString());
+        cboGioiTinh.setSelectedItem(model.getValueAt(r,2).toString());
+        spNgaySinh.setValue(model.getValueAt(r,3));
+
+        String tenKhoa = model.getValueAt(r,4).toString();
+        String tenCD = model.getValueAt(r,5).toString();
+
+        for(int i=0;i<cboKhoa.getItemCount();i++){
+            if(cboKhoa.getItemAt(i).toString().equals(tenKhoa)){
+                cboKhoa.setSelectedIndex(i);
+                break;
+            }
+        }
+
+        for(int i=0;i<cboChucDanh.getItemCount();i++){
+            if(cboChucDanh.getItemAt(i).toString().equals(tenCD)){
+                cboChucDanh.setSelectedIndex(i);
+                break;
+            }
+        }
     }
 
     private void clearForm(){
@@ -244,6 +267,20 @@ public class QuanLyGiangVien extends JFrame {
         txtDiaChi.setText("");
         txtSDT.setText("");
         txtEmail.setText("");
+    }
+
+    private void setFormEnabled(boolean enabled){
+        txtMa.setEnabled(enabled);
+        txtTen.setEnabled(enabled);
+        txtQue.setEnabled(enabled);
+        txtDiaChi.setEnabled(enabled);
+        txtSDT.setEnabled(enabled);
+        txtEmail.setEnabled(enabled);
+        cboGioiTinh.setEnabled(enabled);
+        cboTinhTrang.setEnabled(enabled);
+        cboKhoa.setEnabled(enabled);
+        cboChucDanh.setEnabled(enabled);
+        spNgaySinh.setEnabled(enabled);
     }
 
     public static void main(String[] args) {

@@ -15,16 +15,23 @@ public class QuanLyMonHoc extends JFrame {
     DefaultTableModel model;
     MonHocDAO dao = new MonHocDAO();
 
+    JButton btnThem, btnSua, btnXoa, btnLuu, btnThoat;
+
+    String cheDo = "";
+
     public QuanLyMonHoc() {
 
         setTitle("Quản lý môn học");
-        setSize(850,500);
+        setSize(900,500);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         initUI();
         loadCombo();
         loadTable();
+
+        setFormEnabled(false);
+        btnLuu.setEnabled(false);
     }
 
     private void initUI(){
@@ -45,16 +52,18 @@ public class QuanLyMonHoc extends JFrame {
         left.add(new JLabel("Loại môn học (*)"));
         left.add(cboLoai);
 
-        JButton btnThem = new JButton("Thêm");
-        JButton btnSua = new JButton("Sửa");
-        JButton btnXoa = new JButton("Xóa");
-        JButton btnLuu = new JButton("Lưu");
+        btnThem = new JButton("Thêm");
+        btnSua = new JButton("Sửa");
+        btnXoa = new JButton("Xóa");
+        btnLuu = new JButton("Lưu");
+        btnThoat = new JButton("Thoát");
 
         JPanel pBtn = new JPanel();
         pBtn.add(btnThem);
         pBtn.add(btnLuu);
         pBtn.add(btnSua);
         pBtn.add(btnXoa);
+        pBtn.add(btnThoat);
 
         JPanel mainLeft = new JPanel(new BorderLayout());
         mainLeft.add(left,BorderLayout.CENTER);
@@ -68,15 +77,84 @@ public class QuanLyMonHoc extends JFrame {
         add(mainLeft,BorderLayout.WEST);
         add(new JScrollPane(table),BorderLayout.CENTER);
 
-        // ==== EVENT ====
+        btnThem.addActionListener(e -> {
+            cheDo = "THEM";
+            clearForm();
+            setFormEnabled(true);
+            btnLuu.setEnabled(true);
+            txtMa.setEditable(true);
+        });
 
-        btnThem.addActionListener(e -> clearForm());
+        btnLuu.addActionListener(e -> {
 
-        btnLuu.addActionListener(e -> saveData());
+            if(cheDo.equals("")) return;
 
-        btnSua.addActionListener(e -> updateData());
+            try{
+                MonHoc mh = new MonHoc(
+                        txtMa.getText(),
+                        txtTen.getText(),
+                        Integer.parseInt(txtSoTC.getText()),
+                        ((LoaiMonHoc)cboLoai.getSelectedItem()).getMaLoaiMH()
+                );
 
-        btnXoa.addActionListener(e -> deleteData());
+                if(cheDo.equals("THEM")){
+                    if(dao.insert(mh)){
+                        JOptionPane.showMessageDialog(this,"Thêm thành công");
+                    }
+                }else if(cheDo.equals("SUA")){
+                    if(dao.update(mh)){
+                        JOptionPane.showMessageDialog(this,"Sửa thành công");
+                    }
+                }
+
+                loadTable();
+                clearForm();
+                setFormEnabled(false);
+                btnLuu.setEnabled(false);
+                cheDo = "";
+
+            }catch(Exception ex){
+                JOptionPane.showMessageDialog(this,"Lỗi dữ liệu");
+            }
+        });
+
+        btnSua.addActionListener(e -> {
+            int row = table.getSelectedRow();
+            if(row >= 0){
+                cheDo = "SUA";
+                setFormEnabled(true);
+                btnLuu.setEnabled(true);
+                txtMa.setEditable(false);
+            }
+        });
+
+        btnXoa.addActionListener(e -> {
+            if(dao.delete(txtMa.getText())){
+                loadTable();
+                JOptionPane.showMessageDialog(this,"Xóa thành công");
+            }
+        });
+
+        btnThoat.addActionListener(e -> {
+            int confirm = JOptionPane.showConfirmDialog(
+                    this,
+                    "Bạn có chắc muốn thoát?",
+                    "Xác nhận",
+                    JOptionPane.YES_NO_OPTION
+            );
+            if(confirm == JOptionPane.YES_OPTION){
+                dispose();
+            }
+        });
+
+        table.getSelectionModel().addListSelectionListener(e -> {
+            int row = table.getSelectedRow();
+            if(row >= 0){
+                txtMa.setText(model.getValueAt(row,0).toString());
+                txtTen.setText(model.getValueAt(row,1).toString());
+                txtSoTC.setText(model.getValueAt(row,2).toString());
+            }
+        });
     }
 
     private void loadCombo(){
@@ -86,11 +164,8 @@ public class QuanLyMonHoc extends JFrame {
     }
 
     private void loadTable(){
-
         model.setRowCount(0);
-
         List<MonHoc> list = dao.getAll();
-
         for(MonHoc mh : list){
             model.addRow(new Object[]{
                     mh.getMaMH(),
@@ -108,52 +183,11 @@ public class QuanLyMonHoc extends JFrame {
         cboLoai.setSelectedIndex(0);
     }
 
-    private void saveData(){
-
-        try{
-            MonHoc mh = new MonHoc(
-                    txtMa.getText(),
-                    txtTen.getText(),
-                    Integer.parseInt(txtSoTC.getText()),
-                    ((LoaiMonHoc)cboLoai.getSelectedItem()).getMaLoaiMH()
-            );
-
-            if(dao.insert(mh)){
-                loadTable();
-                JOptionPane.showMessageDialog(this,"Thêm thành công");
-            }
-
-        }catch(Exception ex){
-            JOptionPane.showMessageDialog(this,"Lỗi dữ liệu");
-        }
-    }
-
-    private void updateData(){
-
-        try{
-            MonHoc mh = new MonHoc(
-                    txtMa.getText(),
-                    txtTen.getText(),
-                    Integer.parseInt(txtSoTC.getText()),
-                    ((LoaiMonHoc)cboLoai.getSelectedItem()).getMaLoaiMH()
-            );
-
-            if(dao.update(mh)){
-                loadTable();
-                JOptionPane.showMessageDialog(this,"Sửa thành công");
-            }
-
-        }catch(Exception ex){
-            JOptionPane.showMessageDialog(this,"Lỗi dữ liệu");
-        }
-    }
-
-    private void deleteData(){
-
-        if(dao.delete(txtMa.getText())){
-            loadTable();
-            JOptionPane.showMessageDialog(this,"Xóa thành công");
-        }
+    private void setFormEnabled(boolean enabled){
+        txtMa.setEnabled(enabled);
+        txtTen.setEnabled(enabled);
+        txtSoTC.setEnabled(enabled);
+        cboLoai.setEnabled(enabled);
     }
 
     public static void main(String[] args) {

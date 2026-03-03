@@ -34,8 +34,19 @@ public class CanBoGiangDay {
         this.maKhoa = maKhoa;
         this.maCD = maCD;
     }
+    private String tenKhoa;
+    private String tenCD;
 
-    // getter & setter đầy đủ
+    public String getTenKhoa() { return tenKhoa; }
+    public void setTenKhoa(String tenKhoa) { this.tenKhoa = tenKhoa; }
+    public String getTenCD() {
+        return tenCD;
+    }
+
+    public void setTenCD(String tenCD) {
+        this.tenCD = tenCD;
+    }
+
     public String getMscb() { return mscb; }
     public void setMscb(String mscb) { this.mscb = mscb; }
 
@@ -68,4 +79,8 @@ public class CanBoGiangDay {
 
     public String getMaCD() { return maCD; }
     public void setMaCD(String maCD) { this.maCD = maCD; }
+    @Override
+    public String toString() {
+        return this.getHoTen();
+    }
 }

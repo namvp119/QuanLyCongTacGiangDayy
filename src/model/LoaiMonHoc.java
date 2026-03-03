@@ -25,6 +25,6 @@ public class LoaiMonHoc {
 
     @Override
     public String toString() {
-        return tenLoaiMH; // để ComboBox hiển thị tên
+        return tenLoaiMH; 
     }
 }

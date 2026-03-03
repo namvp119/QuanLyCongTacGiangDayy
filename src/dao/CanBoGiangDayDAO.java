@@ -37,6 +37,8 @@ public class CanBoGiangDayDAO {
 	                    rs.getString("MAKHOA"),
 	                    rs.getString("MACD")
 	            );
+	            cb.setTenKhoa(rs.getString("TENKHOA"));
+	            cb.setTenCD(rs.getString("TENCD"));
 
 	            list.add(cb);
 	        }
