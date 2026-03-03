@@ -113,6 +113,10 @@ public class QuanLyPhongHoc extends JFrame {
                     JOptionPane.showMessageDialog(this,"Mã đã tồn tại!");
                     return;
                 }
+                if(txtMa.getText().isEmpty() || txtTen.getText().isEmpty()){
+                    JOptionPane.showMessageDialog(this,"Nhập đầy đủ dữ liệu!");
+                    return;
+                }
 
                 if (PhongHocDAO.them(ph)) {
                     JOptionPane.showMessageDialog(this,"Thêm thành công");
@@ -130,6 +134,7 @@ public class QuanLyPhongHoc extends JFrame {
             setFormEnabled(false);
             btnLuu.setEnabled(false);
             cheDo = "";
+            
         });
 
         btnSua.addActionListener(e -> {
@@ -144,10 +149,21 @@ public class QuanLyPhongHoc extends JFrame {
         btnXoa.addActionListener(e -> {
             int row = table.getSelectedRow();
             if (row >= 0) {
-                String ma = model.getValueAt(row,0).toString();
-                if (PhongHocDAO.xoa(ma)) {
-                    JOptionPane.showMessageDialog(this,"Xóa thành công");
-                    loadData();
+
+                int confirm = JOptionPane.showConfirmDialog(
+                        this,
+                        "Bạn có chắc muốn xóa?",
+                        "Xác nhận",
+                        JOptionPane.YES_NO_OPTION
+                );
+
+                if (confirm == JOptionPane.YES_OPTION) {
+                    String ma = model.getValueAt(row,0).toString();
+                    if (PhongHocDAO.xoa(ma)) {
+                        JOptionPane.showMessageDialog(this,"Xóa thành công");
+                        loadData();
+                        clearForm();
+                    }
                 }
             }
         });

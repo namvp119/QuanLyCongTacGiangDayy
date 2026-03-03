@@ -74,8 +74,24 @@ public class QuanLyMonHoc extends JFrame {
 
         table = new JTable(model);
 
-        add(mainLeft,BorderLayout.WEST);
-        add(new JScrollPane(table),BorderLayout.CENTER);
+        setLayout(new BorderLayout());
+
+        add(mainLeft, BorderLayout.NORTH);
+        add(new JScrollPane(table), BorderLayout.CENTER);
+        JPanel mainleft = new JPanel(new GridLayout(4,2,10,10));
+        left.setBorder(BorderFactory.createEmptyBorder(15,15,15,15));
+        JLabel lblTitle = new JLabel("THÔNG TIN MÔN HỌC");
+        lblTitle.setFont(new Font("Arial", Font.BOLD, 16));
+        lblTitle.setForeground(Color.BLUE);
+        lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
+
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(lblTitle, BorderLayout.NORTH);
+        topPanel.add(left, BorderLayout.CENTER);
+        topPanel.add(pBtn, BorderLayout.SOUTH);
+
+        add(topPanel, BorderLayout.NORTH);
+        add(new JScrollPane(table), BorderLayout.CENTER);
 
         btnThem.addActionListener(e -> {
             cheDo = "THEM";

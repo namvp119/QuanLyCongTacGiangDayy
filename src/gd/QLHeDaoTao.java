@@ -33,14 +33,16 @@ public class QLHeDaoTao extends JFrame {
 
     private void initUI() {
 
-        JPanel left = new JPanel(new BorderLayout());
-        left.setBackground(new Color(236,226,214));
+        setLayout(new BorderLayout());
+
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.setBackground(new Color(236,226,214));
 
         JLabel lblTitle = new JLabel("Thông tin chi tiết hệ đào tạo");
         lblTitle.setForeground(Color.BLUE);
         lblTitle.setFont(new Font("Arial", Font.BOLD, 16));
         lblTitle.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
-        left.add(lblTitle, BorderLayout.NORTH);
+        topPanel.add(lblTitle, BorderLayout.NORTH);
 
         JPanel form = new JPanel(new GridLayout(2,2,5,10));
         form.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
@@ -54,7 +56,7 @@ public class QLHeDaoTao extends JFrame {
         form.add(new JLabel("Tên hệ đào tạo (*)"));
         form.add(txtTen);
 
-        left.add(form, BorderLayout.CENTER);
+        topPanel.add(form, BorderLayout.CENTER);
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBackground(new Color(236,226,214));
@@ -71,7 +73,7 @@ public class QLHeDaoTao extends JFrame {
         buttonPanel.add(btnXoa);
         buttonPanel.add(btnThoat);
 
-        left.add(buttonPanel, BorderLayout.SOUTH);
+        topPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         model = new DefaultTableModel();
         model.setColumnIdentifiers(new String[]{"Mã hệ", "Tên hệ"});
@@ -85,16 +87,9 @@ public class QLHeDaoTao extends JFrame {
         border.setTitleColor(Color.BLUE);
         scroll.setBorder(border);
 
-        JSplitPane split = new JSplitPane(
-                JSplitPane.HORIZONTAL_SPLIT,
-                left,
-                scroll
-        );
-        split.setDividerLocation(350);
-
-        add(split);
+        add(topPanel, BorderLayout.NORTH);
+        add(scroll, BorderLayout.CENTER);
     }
-
     private void loadData() {
         try {
             model.setRowCount(0);
