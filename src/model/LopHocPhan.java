@@ -3,6 +3,7 @@ package model;
 import java.sql.Date;
 
 public class LopHocPhan {
+
     private String maLHP;
     private String tenLHP;
     private int siSo;
@@ -12,13 +13,18 @@ public class LopHocPhan {
     private String maLop;
     private String maMH;
     private String maPhong;
-    private Date ngay;        
+
+    private Date ngayBatDau;
+    private Date ngayKetThuc;
 
     public LopHocPhan() {
     }
 
-    public LopHocPhan(String maLHP, String tenLHP, int siSo, String tinhTrang, String mscb, String maHocKy,
-            String maLop, String maMH, String maPhong, Date ngay) {
+    public LopHocPhan(String maLHP, String tenLHP, int siSo, String tinhTrang,
+                      String mscb, String maHocKy, String maLop,
+                      String maMH, String maPhong,
+                      Date ngayBatDau, Date ngayKetThuc) {
+
         this.maLHP = maLHP;
         this.tenLHP = tenLHP;
         this.siSo = siSo;
@@ -28,90 +34,42 @@ public class LopHocPhan {
         this.maLop = maLop;
         this.maMH = maMH;
         this.maPhong = maPhong;
-        this.ngay = ngay;
+        this.ngayBatDau = ngayBatDau;
+        this.ngayKetThuc = ngayKetThuc;
     }
 
-    // =========================================================
-    // KHU VỰC GETTER VÀ SETTER (BẮT BUỘC PHẢI CÓ ĐỂ HẾT BÁO LỖI)
-    // =========================================================
-    
-    public String getMaLHP() {
-        return maLHP;
-    }
+    // ================= GETTER & SETTER =================
 
-    public void setMaLHP(String maLHP) {
-        this.maLHP = maLHP;
-    }
+    public String getMaLHP() { return maLHP; }
+    public void setMaLHP(String maLHP) { this.maLHP = maLHP; }
 
-    public String getTenLHP() {
-        return tenLHP;
-    }
+    public String getTenLHP() { return tenLHP; }
+    public void setTenLHP(String tenLHP) { this.tenLHP = tenLHP; }
 
-    public void setTenLHP(String tenLHP) {
-        this.tenLHP = tenLHP;
-    }
+    public int getSiSo() { return siSo; }
+    public void setSiSo(int siSo) { this.siSo = siSo; }
 
-    public int getSiSo() {
-        return siSo;
-    }
+    public String getTinhTrang() { return tinhTrang; }
+    public void setTinhTrang(String tinhTrang) { this.tinhTrang = tinhTrang; }
 
-    public void setSiSo(int siSo) {
-        this.siSo = siSo;
-    }
+    public String getMscb() { return mscb; }
+    public void setMscb(String mscb) { this.mscb = mscb; }
 
-    public String getTinhTrang() {
-        return tinhTrang;
-    }
+    public String getMaHocKy() { return maHocKy; }
+    public void setMaHocKy(String maHocKy) { this.maHocKy = maHocKy; }
 
-    public void setTinhTrang(String tinhTrang) {
-        this.tinhTrang = tinhTrang;
-    }
+    public String getMaLop() { return maLop; }
+    public void setMaLop(String maLop) { this.maLop = maLop; }
 
-    public String getMscb() {
-        return mscb;
-    }
+    public String getMaMH() { return maMH; }
+    public void setMaMH(String maMH) { this.maMH = maMH; }
 
-    public void setMscb(String mscb) {
-        this.mscb = mscb;
-    }
+    public String getMaPhong() { return maPhong; }
+    public void setMaPhong(String maPhong) { this.maPhong = maPhong; }
 
-    public String getMaHocKy() {
-        return maHocKy;
-    }
+    public Date getNgayBatDau() { return ngayBatDau; }
+    public void setNgayBatDau(Date ngayBatDau) { this.ngayBatDau = ngayBatDau; }
 
-    public void setMaHocKy(String maHocKy) {
-        this.maHocKy = maHocKy;
-    }
-
-    public String getMaLop() {
-        return maLop;
-    }
-
-    public void setMaLop(String maLop) {
-        this.maLop = maLop;
-    }
-
-    public String getMaMH() {
-        return maMH;
-    }
-
-    public void setMaMH(String maMH) {
-        this.maMH = maMH;
-    }
-
-    public String getMaPhong() {
-        return maPhong;
-    }
-
-    public void setMaPhong(String maPhong) {
-        this.maPhong = maPhong;
-    }
-
-    public Date getNgay() {
-        return ngay;
-    }
-
-    public void setNgay(Date ngay) {
-        this.ngay = ngay;
-    }
+    public Date getNgayKetThuc() { return ngayKetThuc; }
+    public void setNgayKetThuc(Date ngayKetThuc) { this.ngayKetThuc = ngayKetThuc; }
 }

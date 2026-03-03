@@ -2,27 +2,20 @@ package gui;
 
 import java.awt.EventQueue;
 import java.awt.Font;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 public class FrmPhanCong extends JFrame {
 
-    private static final long serialVersionUID = 1L;
     private JPanel contentPane;
-    
-    // 1. CÁC BIẾN NHẬP LIỆU
+
     private JTextField txtMaLHP;
     private JTextField txtTenLHP;
     private JTextField txtSiSo;
     private JTextField txtNgayBD;
+    private JTextField txtNgayKT;
+
     private JComboBox<String> cboTinhTrang;
     private JComboBox<String> cboGiangVien;
     private JComboBox<String> cboMonHoc;
@@ -30,355 +23,282 @@ public class FrmPhanCong extends JFrame {
     private JComboBox<String> cboHocKy;
     private JComboBox<String> cboLop;
 
-    // 2. CÁC NÚT BẤM VÀ BẢNG
     private JButton btnThem;
     private JButton btnSua;
     private JButton btnXoa;
     private JButton btnLamMoi;
+
     private JTable tblPhanCong;
     private DefaultTableModel tableModel;
 
-    /**
-     * Launch the application (Dùng để chạy test form này độc lập)
-     */
     public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    FrmPhanCong frame = new FrmPhanCong();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        EventQueue.invokeLater(() -> {
+            try {
+                FrmPhanCong frame = new FrmPhanCong();
+                frame.setVisible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
     }
 
-    /**
-     * Create the frame.
-     */
     public FrmPhanCong() {
-        setTitle("Quản Lý Phân Công Giảng Dạy (Lớp Học Phần)");
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Chỉ đóng form này, không tắt cả chương trình
-        setBounds(100, 100, 950, 650);
+
+        setTitle("Quản Lý Phân Công Giảng Dạy");
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setBounds(100, 100, 1000, 680);
         setLocationRelativeTo(null);
-        
+
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+        contentPane.setLayout(null);
         setContentPane(contentPane);
-        contentPane.setLayout(null); // Sử dụng tọa độ tuyệt đối giống WindowBuilder
 
-        // ================= PHẦN 1: KHU VỰC NHẬP LIỆU =================
         JLabel lblTieuDe = new JLabel("PHÂN CÔNG GIẢNG DẠY");
-        lblTieuDe.setFont(new Font("Tahoma", Font.BOLD, 20));
-        lblTieuDe.setBounds(350, 10, 250, 30);
+        lblTieuDe.setFont(new Font("Tahoma", Font.BOLD, 22));
+        lblTieuDe.setBounds(330, 10, 400, 30);
         contentPane.add(lblTieuDe);
 
-        // Cột 1
-        JLabel lblMaLHP = new JLabel("Mã LHP:");
-        lblMaLHP.setBounds(30, 60, 80, 20);
-        contentPane.add(lblMaLHP);
+        // ================= CỘT 1 =================
+        JLabel lblMa = new JLabel("Mã LHP:");
+        lblMa.setBounds(30, 60, 100, 25);
+        contentPane.add(lblMa);
+
         txtMaLHP = new JTextField();
-        txtMaLHP.setBounds(120, 60, 150, 25);
+        txtMaLHP.setBounds(130, 60, 180, 25);
         contentPane.add(txtMaLHP);
 
-        JLabel lblTenLHP = new JLabel("Tên LHP:");
-        lblTenLHP.setBounds(30, 100, 80, 20);
-        contentPane.add(lblTenLHP);
+        JLabel lblTen = new JLabel("Tên LHP:");
+        lblTen.setBounds(30, 100, 100, 25);
+        contentPane.add(lblTen);
+
         txtTenLHP = new JTextField();
-        txtTenLHP.setBounds(120, 100, 150, 25);
+        txtTenLHP.setBounds(130, 100, 180, 25);
         contentPane.add(txtTenLHP);
 
-        JLabel lblSiSo = new JLabel("Sĩ số:");
-        lblSiSo.setBounds(30, 140, 80, 20);
+        JLabel lblSiSo = new JLabel("Sĩ Số:");
+        lblSiSo.setBounds(30, 140, 100, 25);
         contentPane.add(lblSiSo);
+
         txtSiSo = new JTextField();
-        txtSiSo.setBounds(120, 140, 150, 25);
+        txtSiSo.setBounds(130, 140, 180, 25);
         contentPane.add(txtSiSo);
-        
-        JLabel lblNgay = new JLabel("Ngày BĐ:");
-        lblNgay.setBounds(30, 180, 80, 20);
-        contentPane.add(lblNgay);
+
+        JLabel lblNgayBD = new JLabel("Ngày BĐ:");
+        lblNgayBD.setBounds(30, 180, 100, 25);
+        contentPane.add(lblNgayBD);
+
         txtNgayBD = new JTextField("YYYY-MM-DD");
-        txtNgayBD.setBounds(120, 180, 150, 25);
+        txtNgayBD.setBounds(130, 180, 180, 25);
         contentPane.add(txtNgayBD);
 
-        // Cột 2 (Các JComboBox cho Khóa Ngoại)
-        JLabel lblGiangVien = new JLabel("Giảng viên:");
-        lblGiangVien.setBounds(320, 60, 80, 20);
-        contentPane.add(lblGiangVien);
+        JLabel lblNgayKT = new JLabel("Ngày KT:");
+        lblNgayKT.setBounds(30, 220, 100, 25);
+        contentPane.add(lblNgayKT);
+
+        txtNgayKT = new JTextField("YYYY-MM-DD");
+        txtNgayKT.setBounds(130, 220, 180, 25);
+        contentPane.add(txtNgayKT);
+
+        // ================= CỘT 2 =================
+        JLabel lblGV = new JLabel("Giảng Viên:");
+        lblGV.setBounds(350, 60, 100, 25);
+        contentPane.add(lblGV);
+
         cboGiangVien = new JComboBox<>();
-        cboGiangVien.setBounds(400, 60, 180, 25);
+        cboGiangVien.setBounds(470, 60, 200, 25);
         contentPane.add(cboGiangVien);
 
-        JLabel lblMonHoc = new JLabel("Môn học:");
-        lblMonHoc.setBounds(320, 100, 80, 20);
-        contentPane.add(lblMonHoc);
+        JLabel lblMH = new JLabel("Môn Học:");
+        lblMH.setBounds(350, 100, 100, 25);
+        contentPane.add(lblMH);
+
         cboMonHoc = new JComboBox<>();
-        cboMonHoc.setBounds(400, 100, 180, 25);
+        cboMonHoc.setBounds(470, 100, 200, 25);
         contentPane.add(cboMonHoc);
 
-        JLabel lblPhong = new JLabel("Phòng học:");
-        lblPhong.setBounds(320, 140, 80, 20);
+        JLabel lblPhong = new JLabel("Phòng:");
+        lblPhong.setBounds(350, 140, 100, 25);
         contentPane.add(lblPhong);
+
         cboPhongHoc = new JComboBox<>();
-        cboPhongHoc.setBounds(400, 140, 180, 25);
+        cboPhongHoc.setBounds(470, 140, 200, 25);
         contentPane.add(cboPhongHoc);
 
-        JLabel lblHocKy = new JLabel("Học kỳ:");
-        lblHocKy.setBounds(320, 180, 80, 20);
+        JLabel lblHocKy = new JLabel("Học Kỳ:");
+        lblHocKy.setBounds(350, 180, 100, 25);
         contentPane.add(lblHocKy);
+
         cboHocKy = new JComboBox<>();
-        cboHocKy.setBounds(400, 180, 180, 25);
+        cboHocKy.setBounds(470, 180, 200, 25);
         contentPane.add(cboHocKy);
 
-        // Cột 3
-        JLabel lblLop = new JLabel("Lớp CN:");
-        lblLop.setBounds(630, 60, 70, 20);
+        JLabel lblLop = new JLabel("Lớp:");
+        lblLop.setBounds(350, 220, 100, 25);
         contentPane.add(lblLop);
+
         cboLop = new JComboBox<>();
-        cboLop.setBounds(700, 60, 180, 25);
+        cboLop.setBounds(470, 220, 200, 25);
         contentPane.add(cboLop);
-        
-        JLabel lblTinhTrang = new JLabel("Tình trạng:");
-        lblTinhTrang.setBounds(630, 100, 70, 20);
+
+        // ================= CỘT 3 =================
+        JLabel lblTinhTrang = new JLabel("Tình Trạng:");
+        lblTinhTrang.setBounds(720, 60, 100, 25);
         contentPane.add(lblTinhTrang);
+
         cboTinhTrang = new JComboBox<>();
         cboTinhTrang.addItem("Đang mở");
         cboTinhTrang.addItem("Đã khóa");
-        cboTinhTrang.setBounds(700, 100, 180, 25);
+        cboTinhTrang.setBounds(820, 60, 150, 25);
         contentPane.add(cboTinhTrang);
 
-        // ================= PHẦN 2: KHU VỰC NÚT BẤM =================
-        btnThem = new JButton("Thêm Phân Công");
-        btnThem.setBounds(200, 230, 130, 35);
+        // ================= NÚT =================
+        btnThem = new JButton("Thêm");
+        btnThem.setBounds(250, 270, 120, 35);
         contentPane.add(btnThem);
 
         btnSua = new JButton("Cập Nhật");
-        btnSua.setBounds(350, 230, 100, 35);
+        btnSua.setBounds(390, 270, 120, 35);
         contentPane.add(btnSua);
 
         btnXoa = new JButton("Xóa");
-        btnXoa.setBounds(470, 230, 100, 35);
+        btnXoa.setBounds(530, 270, 120, 35);
         contentPane.add(btnXoa);
 
         btnLamMoi = new JButton("Làm Mới");
-        btnLamMoi.setBounds(590, 230, 100, 35);
+        btnLamMoi.setBounds(670, 270, 120, 35);
         contentPane.add(btnLamMoi);
 
-        // ================= PHẦN 3: BẢNG HIỂN THỊ DỮ LIỆU =================
+        // ================= BẢNG =================
         JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setBounds(30, 290, 870, 300);
+        scrollPane.setBounds(30, 330, 940, 280);
         contentPane.add(scrollPane);
 
-        // Khởi tạo các cột cho bảng
-        String[] columnNames = {"Mã LHP", "Tên Lớp HP", "Môn Học", "Giảng Viên", "Phòng", "Sĩ Số", "Ngày BĐ"};
-        tableModel = new DefaultTableModel(columnNames, 0);
+        String[] cols = {
+                "Mã LHP", "Tên LHP", "Môn", "Giảng Viên",
+                "Phòng", "Sĩ Số", "Ngày BĐ", "Ngày KT"
+        };
+
+        tableModel = new DefaultTableModel(cols, 0);
         tblPhanCong = new JTable(tableModel);
         scrollPane.setViewportView(tblPhanCong);
-        
-        docDuLieuVaoBang();
+
         loadTatCaComboBox();
-     // =========================================================
-        // 1. NÚT LÀM MỚI (Xóa trắng các ô nhập liệu để nhập mới)
-        // =========================================================
-        btnLamMoi.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent e) {
-                txtMaLHP.setText("");
-                txtTenLHP.setText("");
-                txtSiSo.setText("");
-                txtNgayBD.setText("YYYY-MM-DD");
-                
-                // Trả các ComboBox về lựa chọn đầu tiên
-                if(cboGiangVien.getItemCount() > 0) cboGiangVien.setSelectedIndex(0);
-                if(cboMonHoc.getItemCount() > 0) cboMonHoc.setSelectedIndex(0);
-                if(cboPhongHoc.getItemCount() > 0) cboPhongHoc.setSelectedIndex(0);
-                if(cboHocKy.getItemCount() > 0) cboHocKy.setSelectedIndex(0);
-                if(cboLop.getItemCount() > 0) cboLop.setSelectedIndex(0);
-                cboTinhTrang.setSelectedIndex(0);
-                
-                txtMaLHP.requestFocus(); // Nhảy con trỏ chuột về ô Mã LHP
+        docDuLieuVaoBang();
+
+        // ================= NÚT THÊM =================
+        btnThem.addActionListener(e -> {
+            try {
+                model.LopHocPhan lhp = new model.LopHocPhan();
+
+                lhp.setMaLHP(txtMaLHP.getText());
+                lhp.setTenLHP(txtTenLHP.getText());
+                lhp.setSiSo(Integer.parseInt(txtSiSo.getText()));
+                lhp.setTinhTrang(cboTinhTrang.getSelectedItem().toString());
+                lhp.setMscb(cboGiangVien.getSelectedItem().toString());
+                lhp.setMaMH(cboMonHoc.getSelectedItem().toString());
+                lhp.setMaPhong(cboPhongHoc.getSelectedItem().toString());
+                lhp.setMaHocKy(cboHocKy.getSelectedItem().toString());
+                lhp.setMaLop(cboLop.getSelectedItem().toString());
+
+                lhp.setNgayBatDau(java.sql.Date.valueOf(txtNgayBD.getText()));
+                lhp.setNgayKetThuc(java.sql.Date.valueOf(txtNgayKT.getText()));
+
+                if (dao.LopHocPhanDAO.themLopHocPhan(lhp)) {
+                    JOptionPane.showMessageDialog(null, "Thêm thành công!");
+                    docDuLieuVaoBang();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Thêm thất bại!");
+                }
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Sai định dạng ngày hoặc dữ liệu!");
             }
         });
 
-        // =========================================================
-        // 2. NÚT THÊM PHÂN CÔNG
-        // =========================================================
-        btnThem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent e) {
-                try {
-                    // Gom dữ liệu từ trên giao diện nhét vào hộp Model
-                    model.LopHocPhan lhp = new model.LopHocPhan();
-                    lhp.setMaLHP(txtMaLHP.getText());
-                    lhp.setTenLHP(txtTenLHP.getText());
-                    lhp.setSiSo(Integer.parseInt(txtSiSo.getText()));
-                    lhp.setTinhTrang(cboTinhTrang.getSelectedItem().toString());
-                    lhp.setMscb(cboGiangVien.getSelectedItem().toString());
-                    lhp.setMaMH(cboMonHoc.getSelectedItem().toString());
-                    lhp.setMaPhong(cboPhongHoc.getSelectedItem().toString());
-                    lhp.setMaHocKy(cboHocKy.getSelectedItem().toString());
-                    lhp.setMaLop(cboLop.getSelectedItem().toString());
-                    
-                    // Ép kiểu chuỗi ngày tháng sang dạng Date của SQL (Bắt buộc phải gõ đúng YYYY-MM-DD)
-                    lhp.setNgay(java.sql.Date.valueOf(txtNgayBD.getText())); 
+        // ================= NÚT CẬP NHẬT =================
+        btnSua.addActionListener(e -> {
+            try {
+                model.LopHocPhan lhp = new model.LopHocPhan();
 
-                    // Gọi DAO đi giao hàng cho Database
-                    if (dao.LopHocPhanDAO.themLopHocPhan(lhp)) {
-                        javax.swing.JOptionPane.showMessageDialog(null, "Thêm phân công thành công!");
-                        docDuLieuVaoBang(); // F5 lại bảng dữ liệu
-                        btnLamMoi.doClick(); // Gọi nút Làm mới để xóa trắng ô chữ
-                    } else {
-                        javax.swing.JOptionPane.showMessageDialog(null, "Thêm thất bại. Có thể trùng Mã LHP!");
-                    }
-                } catch (Exception ex) {
-                    javax.swing.JOptionPane.showMessageDialog(null, "Lỗi dữ liệu! Sĩ số phải là số và Ngày phải đúng chuẩn YYYY-MM-DD.");
+                lhp.setMaLHP(txtMaLHP.getText());
+                lhp.setTenLHP(txtTenLHP.getText());
+                lhp.setSiSo(Integer.parseInt(txtSiSo.getText()));
+                lhp.setTinhTrang(cboTinhTrang.getSelectedItem().toString());
+                lhp.setMscb(cboGiangVien.getSelectedItem().toString());
+                lhp.setMaMH(cboMonHoc.getSelectedItem().toString());
+                lhp.setMaPhong(cboPhongHoc.getSelectedItem().toString());
+                lhp.setMaHocKy(cboHocKy.getSelectedItem().toString());
+                lhp.setMaLop(cboLop.getSelectedItem().toString());
+
+                lhp.setNgayBatDau(java.sql.Date.valueOf(txtNgayBD.getText()));
+                lhp.setNgayKetThuc(java.sql.Date.valueOf(txtNgayKT.getText()));
+
+                if (dao.LopHocPhanDAO.capNhatLopHocPhan(lhp)) {
+                    JOptionPane.showMessageDialog(null, "Cập nhật thành công!");
+                    docDuLieuVaoBang();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Cập nhật thất bại!");
                 }
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Sai dữ liệu!");
             }
         });
 
-        // =========================================================
-        // 3. NÚT SỬA (CẬP NHẬT)
-        // =========================================================
-        btnSua.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent e) {
-                int row = tblPhanCong.getSelectedRow();
-                if (row < 0) {
-                    javax.swing.JOptionPane.showMessageDialog(null, "Vui lòng click chọn 1 lớp trên bảng để Sửa!");
-                    return;
-                }
-                
-                try {
-                    model.LopHocPhan lhp = new model.LopHocPhan();
-                    lhp.setMaLHP(txtMaLHP.getText()); // Mã không được đổi, dùng làm chìa khóa tìm kiếm
-                    lhp.setTenLHP(txtTenLHP.getText());
-                    lhp.setSiSo(Integer.parseInt(txtSiSo.getText()));
-                    lhp.setTinhTrang(cboTinhTrang.getSelectedItem().toString());
-                    lhp.setMscb(cboGiangVien.getSelectedItem().toString());
-                    lhp.setMaMH(cboMonHoc.getSelectedItem().toString());
-                    lhp.setMaPhong(cboPhongHoc.getSelectedItem().toString());
-                    lhp.setMaHocKy(cboHocKy.getSelectedItem().toString());
-                    lhp.setMaLop(cboLop.getSelectedItem().toString());
-                    lhp.setNgay(java.sql.Date.valueOf(txtNgayBD.getText())); 
-
-                    if (dao.LopHocPhanDAO.capNhatLopHocPhan(lhp)) {
-                        javax.swing.JOptionPane.showMessageDialog(null, "Cập nhật thành công!");
-                        docDuLieuVaoBang(); 
-                    } else {
-                        javax.swing.JOptionPane.showMessageDialog(null, "Cập nhật thất bại!");
-                    }
-                } catch (Exception ex) {
-                    javax.swing.JOptionPane.showMessageDialog(null, "Lỗi dữ liệu nhập vào!");
-                }
-            }
-        });
-
-        // =========================================================
-        // 4. NÚT XÓA
-        // =========================================================
-        btnXoa.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent e) {
-                int row = tblPhanCong.getSelectedRow();
-                if (row < 0) {
-                    javax.swing.JOptionPane.showMessageDialog(null, "Vui lòng click chọn dòng cần Xóa trên bảng!");
-                    return;
-                }
-                
-                String maLHP = txtMaLHP.getText();
-                // Bật hộp thoại hỏi cho chắc chắn
-                int confirm = javax.swing.JOptionPane.showConfirmDialog(null, 
-                    "Bạn có chắc chắn muốn xóa lớp " + maLHP + " không?", "Xác nhận xóa", javax.swing.JOptionPane.YES_NO_OPTION);
-                
-                if (confirm == javax.swing.JOptionPane.YES_OPTION) {
-                    if (dao.LopHocPhanDAO.xoaLopHocPhan(maLHP)) {
-                        javax.swing.JOptionPane.showMessageDialog(null, "Xóa thành công!");
-                        docDuLieuVaoBang();
-                        btnLamMoi.doClick();
-                    } else {
-                        javax.swing.JOptionPane.showMessageDialog(null, "Xóa thất bại!");
-                    }
-                }
-            }
-        });
+        // ================= CLICK BẢNG =================
         tblPhanCong.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
-                // Lấy ra vị trí dòng mà người dùng vừa click
+
                 int row = tblPhanCong.getSelectedRow();
-                
-                if (row >= 0) {
-                    // Lấy dữ liệu từng cột ở dòng đó và ném lên các ô chữ
-                    txtMaLHP.setText(tableModel.getValueAt(row, 0).toString());
-                    txtTenLHP.setText(tableModel.getValueAt(row, 1).toString());
-                    
-                    // Ném lên JComboBox (Ghi chú: Lát nữa mình sẽ làm cho nó xịn hơn)
-                    if(tableModel.getValueAt(row, 2) != null) {
-                        cboMonHoc.setSelectedItem(tableModel.getValueAt(row, 2).toString());
-                    }
-                    if(tableModel.getValueAt(row, 3) != null) {
-                        cboGiangVien.setSelectedItem(tableModel.getValueAt(row, 3).toString());
-                    }
-                    if(tableModel.getValueAt(row, 4) != null) {
-                        cboPhongHoc.setSelectedItem(tableModel.getValueAt(row, 4).toString());
-                    }
-                    
-                    txtSiSo.setText(tableModel.getValueAt(row, 5).toString());
-                    
-                    if(tableModel.getValueAt(row, 6) != null) {
-                        txtNgayBD.setText(tableModel.getValueAt(row, 6).toString());
-                    }
-                }
+
+                txtMaLHP.setText(tableModel.getValueAt(row, 0).toString());
+                txtTenLHP.setText(tableModel.getValueAt(row, 1).toString());
+                cboMonHoc.setSelectedItem(tableModel.getValueAt(row, 2));
+                cboGiangVien.setSelectedItem(tableModel.getValueAt(row, 3));
+                cboPhongHoc.setSelectedItem(tableModel.getValueAt(row, 4));
+                txtSiSo.setText(tableModel.getValueAt(row, 5).toString());
+                txtNgayBD.setText(tableModel.getValueAt(row, 6).toString());
+                txtNgayKT.setText(tableModel.getValueAt(row, 7).toString());
             }
         });
-        
     }
+
     private void docDuLieuVaoBang() {
-        // 1. Xóa sạch dữ liệu cũ trên bảng (nếu có) để tránh bị nhân đôi
         tableModel.setRowCount(0);
-        
-        // 2. Gọi DAO lấy danh sách Lớp Học Phần từ Database
-        java.util.ArrayList<model.LopHocPhan> dsLHP = dao.LopHocPhanDAO.layDanhSachLopHocPhan();
-        
-        // 3. Duyệt qua từng dòng dữ liệu và nạp lên Bảng
-        for (model.LopHocPhan lhp : dsLHP) {
-            Object[] row = {
-                lhp.getMaLHP(),
-                lhp.getTenLHP(),
-                lhp.getMaMH(),
-                lhp.getMscb(),   // Tạm thời hiển thị Mã Giảng viên
-                lhp.getMaPhong(),
-                lhp.getSiSo(),
-                lhp.getNgay()
-            };
-            tableModel.addRow(row); // Thêm dòng vào bảng
+        for (model.LopHocPhan lhp : dao.LopHocPhanDAO.layDanhSachLopHocPhan()) {
+            tableModel.addRow(new Object[]{
+                    lhp.getMaLHP(),
+                    lhp.getTenLHP(),
+                    lhp.getMaMH(),
+                    lhp.getMscb(),
+                    lhp.getMaPhong(),
+                    lhp.getSiSo(),
+                    lhp.getNgayBatDau(),
+                    lhp.getNgayKetThuc()
+            });
         }
     }
- // Hàm siêu tốc: Quét 5 bảng trong CSDL và đổ mã vào 5 ô ComboBox
- // Hàm siêu tốc: Quét dữ liệu từ DAO đổ vào ComboBox
+
     private void loadTatCaComboBox() {
-        try {
-            // 1. Đổ dữ liệu Giảng viên (MSCB)
-            cboGiangVien.removeAllItems();
-            for (String item : dao.LopHocPhanDAO.getDSGiangVien()) cboGiangVien.addItem(item);
+        cboGiangVien.removeAllItems();
+        for (String s : dao.LopHocPhanDAO.getDSGiangVien())
+            cboGiangVien.addItem(s);
 
-            // 2. Đổ dữ liệu Môn học (MAMH)
-            cboMonHoc.removeAllItems();
-            for (String item : dao.LopHocPhanDAO.getDSMonHoc()) cboMonHoc.addItem(item);
+        cboMonHoc.removeAllItems();
+        for (String s : dao.LopHocPhanDAO.getDSMonHoc())
+            cboMonHoc.addItem(s);
 
-            // 3. Đổ dữ liệu Phòng học (MAPHONG)
-            cboPhongHoc.removeAllItems();
-            for (String item : dao.LopHocPhanDAO.getDSPhongHoc()) cboPhongHoc.addItem(item);
+        cboPhongHoc.removeAllItems();
+        for (String s : dao.LopHocPhanDAO.getDSPhongHoc())
+            cboPhongHoc.addItem(s);
 
-            // 4. Đổ dữ liệu Học kỳ (MAHOCKY)
-            cboHocKy.removeAllItems();
-            for (String item : dao.LopHocPhanDAO.getDSHocKy()) cboHocKy.addItem(item);
+        cboHocKy.removeAllItems();
+        for (String s : dao.LopHocPhanDAO.getDSHocKy())
+            cboHocKy.addItem(s);
 
-            // 5. Đổ dữ liệu Lớp chuyên ngành (MALOP)
-            cboLop.removeAllItems();
-            for (String item : dao.LopHocPhanDAO.getDSLop()) cboLop.addItem(item);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            javax.swing.JOptionPane.showMessageDialog(this, "Lỗi khi tải dữ liệu ComboBox: " + e.getMessage());
-        }
+        cboLop.removeAllItems();
+        for (String s : dao.LopHocPhanDAO.getDSLop())
+            cboLop.addItem(s);
     }
 }

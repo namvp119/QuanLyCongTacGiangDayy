@@ -10,7 +10,6 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
@@ -65,7 +64,6 @@ public class FrmTrangChu extends JFrame {
         JMenuItem mniSinhVien = new JMenuItem("Quản lý Sinh viên");
         JMenuItem mniGiangVien = new JMenuItem("Quản lý Giảng viên");
         JMenuItem mniLopChuyenNganh = new JMenuItem("Quản lý Lớp chuyên ngành");
-        JMenuItem mniLopHocPhan = new JMenuItem("Quản lý Lớp học phần");
 
         mnQuanLy.add(mniKhoa);
         mnQuanLy.add(mniHocKy);
@@ -74,7 +72,6 @@ public class FrmTrangChu extends JFrame {
         mnQuanLy.add(mniSinhVien);
         mnQuanLy.add(mniGiangVien);
         mnQuanLy.add(mniLopChuyenNganh);
-        mnQuanLy.add(mniLopHocPhan);
 
         // 3. CỤC MENU "NGHIỆP VỤ - LỊCH DẠY"
         JMenu mnNghiepVu = new JMenu("Nghiệp vụ - Lịch dạy");
@@ -82,9 +79,10 @@ public class FrmTrangChu extends JFrame {
         menuBar.add(mnNghiepVu);
 
         JMenuItem mniPhanCong = new JMenuItem("Phân công giảng dạy");
-        JMenuItem mniXemLich = new JMenuItem("Xem thời khóa biểu");
+        JMenuItem mniXemLich = new JMenuItem("Xem lịch dạy");
 
         mnNghiepVu.add(mniPhanCong);
+        mnNghiepVu.addSeparator();
         mnNghiepVu.add(mniXemLich);
 
         // 4. CỤC MENU "TÍNH LƯƠNG & BÁO CÁO"
@@ -92,11 +90,9 @@ public class FrmTrangChu extends JFrame {
         mnTinhLuong.setFont(new Font("Segoe UI", Font.BOLD, 14));
         menuBar.add(mnTinhLuong);
 
-        JMenuItem mniCauHinhLuong = new JMenuItem("Cấu hình Đơn giá & Hệ số");
         JMenuItem mniBangLuong = new JMenuItem("Tính bảng lương");
         JMenuItem mniThongKe = new JMenuItem("Thống kê công tác giảng dạy");
 
-        mnTinhLuong.add(mniCauHinhLuong);
         mnTinhLuong.add(mniBangLuong);
         mnTinhLuong.add(mniThongKe);
 
@@ -134,20 +130,25 @@ public class FrmTrangChu extends JFrame {
         contentPane.add(lblBanner, BorderLayout.CENTER);
 
         // ================= CƠ CHẾ PHÂN QUYỀN =================
-        if (quyen.equals("giangvien")) {
-            mniTaiKhoan.setVisible(false); // GV không được cấp acc
-            mniCauHinhLuong.setVisible(false); // GV không được sửa hệ số lương
-            mnQuanLy.setVisible(false); // Ẩn luôn toàn bộ danh mục từ điển
-            mniPhanCong.setVisible(false); // GV không được tự phân công mình
-            mniBangLuong.setVisible(false); // GV không tự chạy bảng lương toàn trường
-        } else if (quyen.equals("giaovu")) {
-            mniTaiKhoan.setVisible(false); // Giáo vụ cũng không được cấp acc (chỉ Admin)
-            mniCauHinhLuong.setVisible(false); // Giáo vụ chỉ xài, không cấu hình
+        // Mặc định Admin toàn quyền, không cần xử lý gì thêm.
+        
+        if (quyen.equalsIgnoreCase("giaovu")) {
+            // Quyền Giáo vụ: Chỉ xài bảng lương và thống kê
+            mniTaiKhoan.setVisible(false);
+            mnQuanLy.setVisible(false); // Ẩn nguyên cụm menu Danh mục
+            mnNghiepVu.setVisible(false); // Ẩn nguyên cụm menu Nghiệp vụ
+        } 
+        else if (quyen.equalsIgnoreCase("canbo") || quyen.equalsIgnoreCase("giangvien")) {
+            // Quyền Cán bộ / Giảng viên: Chỉ xem lịch dạy
+            mniTaiKhoan.setVisible(false);
+            mnQuanLy.setVisible(false); 
+            mnTinhLuong.setVisible(false); // Ẩn nguyên cụm menu Tính lương
+            mniPhanCong.setVisible(false); // Ẩn phân công giảng dạy, chỉ để lại Xem lịch dạy
         }
 
-// ================= GẮN SỰ KIỆN NÚT BẤM =================
+        // ================= GẮN SỰ KIỆN NÚT BẤM =================
         
-        // 1. Hệ Thống (Package gui)
+        // 1. Hệ Thống 
         mniDoiMatKhau.addActionListener(e -> new gui.FrmDoiMatKhau(tenUser).setVisible(true));
         mniTaiKhoan.addActionListener(e -> new gui.FrmQuanLyTaiKhoan().setVisible(true));
         mniDangXuat.addActionListener(e -> {
@@ -163,23 +164,13 @@ public class FrmTrangChu extends JFrame {
         mniPhongHoc.addActionListener(e -> new gd.QuanLyPhongHoc().setVisible(true));
         mniGiangVien.addActionListener(e -> new gd.QuanLyGiangVien().setVisible(true));
         mniLopChuyenNganh.addActionListener(e -> new gd.QuanLyLopChuyenNganh().setVisible(true));
-        
-        // Ân đã làm xong Quản lý Sinh viên (Có file gd.QuanLySinhVien.java)
         mniSinhVien.addActionListener(e -> new gd.QuanLySinhVien().setVisible(true));
-        
-        // Chưa có file Quản lý Lớp học phần -> Bật thông báo
-        mniLopHocPhan.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this, "Danh mục Lớp Học Phần đang được hoàn thiện, chưa có giao diện!");
-        });
 
         // 3. Nghiệp Vụ - Lịch Dạy (Phần của Duy - package gui)
         mniPhanCong.addActionListener(e -> new gui.FrmPhanCong().setVisible(true));
         mniXemLich.addActionListener(e -> new gui.FrmXemLich(tenUser, quyen).setVisible(true));
-        // 4. Tính Lương & Báo Cáo 
-        // Gọi form QLChucDanh của Ân làm cấu hình hệ số lương luôn
-        mniCauHinhLuong.addActionListener(e -> new gd.QLChucDanh().setVisible(true));
-        
-        // (Phần của Duy - package gui)
+
+        // 4. Tính Lương & Báo Cáo (Phần của Duy - package gui)
         mniBangLuong.addActionListener(e -> new gui.FrmTinhLuong().setVisible(true));
         mniThongKe.addActionListener(e -> new gui.FrmThongKe().setVisible(true));
     }
