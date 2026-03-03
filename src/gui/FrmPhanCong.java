@@ -353,50 +353,29 @@ public class FrmPhanCong extends JFrame {
         }
     }
  // Hàm siêu tốc: Quét 5 bảng trong CSDL và đổ mã vào 5 ô ComboBox
+ // Hàm siêu tốc: Quét dữ liệu từ DAO đổ vào ComboBox
     private void loadTatCaComboBox() {
         try {
-            // Mở kết nối Database
-            java.sql.Connection conn = dao.DatabaseConnection.getConnection();
-            java.sql.Statement st = conn.createStatement();
-            java.sql.ResultSet rs;
-
             // 1. Đổ dữ liệu Giảng viên (MSCB)
-            cboGiangVien.removeAllItems(); // Xóa rác cũ trước khi đổ
-            rs = st.executeQuery("SELECT MSCB FROM CANBOGIANGDAY");
-            while(rs.next()) {
-                cboGiangVien.addItem(rs.getString("MSCB"));
-            }
+            cboGiangVien.removeAllItems();
+            for (String item : dao.LopHocPhanDAO.getDSGiangVien()) cboGiangVien.addItem(item);
 
-            // 2. Đổ dữ liệu Môn học (MAMH) - Lưu ý: Bảng của bạn tên là MONHC
+            // 2. Đổ dữ liệu Môn học (MAMH)
             cboMonHoc.removeAllItems();
-            rs = st.executeQuery("SELECT MAMH FROM MONHC");
-            while(rs.next()) {
-                cboMonHoc.addItem(rs.getString("MAMH"));
-            }
+            for (String item : dao.LopHocPhanDAO.getDSMonHoc()) cboMonHoc.addItem(item);
 
             // 3. Đổ dữ liệu Phòng học (MAPHONG)
             cboPhongHoc.removeAllItems();
-            rs = st.executeQuery("SELECT MAPHONG FROM PHONGHOC");
-            while(rs.next()) {
-                cboPhongHoc.addItem(rs.getString("MAPHONG"));
-            }
+            for (String item : dao.LopHocPhanDAO.getDSPhongHoc()) cboPhongHoc.addItem(item);
 
             // 4. Đổ dữ liệu Học kỳ (MAHOCKY)
             cboHocKy.removeAllItems();
-            rs = st.executeQuery("SELECT MAHOCKY FROM HOCKY");
-            while(rs.next()) {
-                cboHocKy.addItem(rs.getString("MAHOCKY"));
-            }
+            for (String item : dao.LopHocPhanDAO.getDSHocKy()) cboHocKy.addItem(item);
 
             // 5. Đổ dữ liệu Lớp chuyên ngành (MALOP)
             cboLop.removeAllItems();
-            rs = st.executeQuery("SELECT MALOP FROM LOPCHUYENNGANH");
-            while(rs.next()) {
-                cboLop.addItem(rs.getString("MALOP"));
-            }
+            for (String item : dao.LopHocPhanDAO.getDSLop()) cboLop.addItem(item);
 
-            // Đóng kết nối
-            conn.close();
         } catch (Exception e) {
             e.printStackTrace();
             javax.swing.JOptionPane.showMessageDialog(this, "Lỗi khi tải dữ liệu ComboBox: " + e.getMessage());

@@ -113,4 +113,54 @@ public class LopHocPhanDAO {
         }
         return ketQua;
     }
+ // --- 5 HÀM HỖ TRỢ ĐỔ DỮ LIỆU COMBOBOX ---
+    public static java.util.List<String> getDSGiangVien() {
+        java.util.List<String> list = new java.util.ArrayList<>();
+        try (java.sql.Connection conn = DatabaseConnection.getConnection();
+             java.sql.Statement st = conn.createStatement();
+             java.sql.ResultSet rs = st.executeQuery("SELECT MSCB FROM CANBOGIANGDAY")) {
+            while (rs.next()) list.add(rs.getString("MSCB"));
+        } catch (Exception e) { e.printStackTrace(); }
+        return list;
+    }
+
+    public static java.util.List<String> getDSMonHoc() {
+        java.util.List<String> list = new java.util.ArrayList<>();
+        try (java.sql.Connection conn = DatabaseConnection.getConnection();
+             java.sql.Statement st = conn.createStatement();
+             java.sql.ResultSet rs = st.executeQuery("SELECT MAMH FROM MONHC")) {
+            while (rs.next()) list.add(rs.getString("MAMH"));
+        } catch (Exception e) { e.printStackTrace(); }
+        return list;
+    }
+
+    public static java.util.List<String> getDSPhongHoc() {
+        java.util.List<String> list = new java.util.ArrayList<>();
+        try (java.sql.Connection conn = DatabaseConnection.getConnection();
+             java.sql.Statement st = conn.createStatement();
+             java.sql.ResultSet rs = st.executeQuery("SELECT MAPHONG FROM PHONGHOC")) {
+            while (rs.next()) list.add(rs.getString("MAPHONG"));
+        } catch (Exception e) { e.printStackTrace(); }
+        return list;
+    }
+
+    public static java.util.List<String> getDSHocKy() {
+        java.util.List<String> list = new java.util.ArrayList<>();
+        try (java.sql.Connection conn = DatabaseConnection.getConnection();
+             java.sql.Statement st = conn.createStatement();
+             java.sql.ResultSet rs = st.executeQuery("SELECT MAHOCKY FROM HOCKY")) {
+            while (rs.next()) list.add(rs.getString("MAHOCKY"));
+        } catch (Exception e) { e.printStackTrace(); }
+        return list;
+    }
+
+    public static java.util.List<String> getDSLop() {
+        java.util.List<String> list = new java.util.ArrayList<>();
+        try (java.sql.Connection conn = DatabaseConnection.getConnection();
+             java.sql.Statement st = conn.createStatement();
+             java.sql.ResultSet rs = st.executeQuery("SELECT MALOP FROM LOPCHUYENNGANH")) {
+            while (rs.next()) list.add(rs.getString("MALOP"));
+        } catch (Exception e) { e.printStackTrace(); }
+        return list;
+    }
 }
