@@ -20,7 +20,7 @@ public class QuanLyGiangVien extends JFrame {
     private JTable table;
     private DefaultTableModel model;
 
-    private JButton btnThem, btnSua, btnXoa, btnLuu, btnThoat;
+    private JButton btnThem, btnSua, btnXoa, btnLuu;
 
     private String mode = "";
 
@@ -32,7 +32,7 @@ public class QuanLyGiangVien extends JFrame {
         setTitle("Quản lý giảng viên");
         setSize(1100, 600);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         initUI();
         loadCombo();
@@ -76,19 +76,16 @@ public class QuanLyGiangVien extends JFrame {
         btnSua = new JButton("Sửa");
         btnXoa = new JButton("Xóa");
         btnLuu = new JButton("Lưu");
-        btnThoat = new JButton("Thoát");
 
         btnThem.setBounds(30,y,80,30);
         btnSua.setBounds(120,y,80,30);
         btnXoa.setBounds(210,y,80,30);
         btnLuu.setBounds(300,y,80,30);
-        btnThoat.setBounds(390,y,80,30);
 
         left.add(btnThem);
         left.add(btnSua);
         left.add(btnXoa);
         left.add(btnLuu);
-        left.add(btnThoat);
 
         model = new DefaultTableModel(
                 new String[]{"MSCB","Họ tên","Giới tính","Ngày sinh","Khoa","Chức danh"},0);
@@ -122,7 +119,6 @@ public class QuanLyGiangVien extends JFrame {
 
         btnLuu.addActionListener(e -> saveData());
         btnXoa.addActionListener(e -> deleteData());
-        btnThoat.addActionListener(e -> dispose());
 
         table.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {

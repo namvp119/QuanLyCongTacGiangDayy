@@ -15,7 +15,7 @@ public class QuanLyMonHoc extends JFrame {
     DefaultTableModel model;
     MonHocDAO dao = new MonHocDAO();
 
-    JButton btnThem, btnSua, btnXoa, btnLuu, btnThoat;
+    JButton btnThem, btnSua, btnXoa, btnLuu;
 
     String cheDo = "";
 
@@ -24,7 +24,7 @@ public class QuanLyMonHoc extends JFrame {
         setTitle("Quản lý môn học");
         setSize(900,500);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         initUI();
         loadCombo();
@@ -56,14 +56,12 @@ public class QuanLyMonHoc extends JFrame {
         btnSua = new JButton("Sửa");
         btnXoa = new JButton("Xóa");
         btnLuu = new JButton("Lưu");
-        btnThoat = new JButton("Thoát");
 
         JPanel pBtn = new JPanel();
         pBtn.add(btnThem);
         pBtn.add(btnLuu);
         pBtn.add(btnSua);
         pBtn.add(btnXoa);
-        pBtn.add(btnThoat);
 
         JPanel mainLeft = new JPanel(new BorderLayout());
         mainLeft.add(left,BorderLayout.CENTER);
@@ -151,17 +149,6 @@ public class QuanLyMonHoc extends JFrame {
             }
         });
 
-        btnThoat.addActionListener(e -> {
-            int confirm = JOptionPane.showConfirmDialog(
-                    this,
-                    "Bạn có chắc muốn thoát?",
-                    "Xác nhận",
-                    JOptionPane.YES_NO_OPTION
-            );
-            if(confirm == JOptionPane.YES_OPTION){
-                dispose();
-            }
-        });
 
         table.getSelectionModel().addListSelectionListener(e -> {
             int row = table.getSelectedRow();

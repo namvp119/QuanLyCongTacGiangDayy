@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class QLKhoa extends JFrame {
 
     private JTextField txtMaKhoa, txtTenKhoa;
-    private JButton btnThem, btnLuu, btnSua, btnXoa, btnThoat;
+    private JButton btnThem, btnLuu, btnSua, btnXoa;
     private JList<String> listKhoa;
     private DefaultListModel<String> listModel;
 
@@ -20,7 +20,7 @@ public class QLKhoa extends JFrame {
         setTitle("Quản lý khoa");
         setSize(800, 450);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLayout(null);
 
         JPanel pnlThongTin = new JPanel(null);
@@ -60,9 +60,6 @@ public class QLKhoa extends JFrame {
         btnXoa.setBounds(320, 140, 90, 35);
         pnlThongTin.add(btnXoa);
 
-        btnThoat = new JButton("Thoát");
-        btnThoat.setBounds(170, 190, 120, 35);
-        pnlThongTin.add(btnThoat);
 
         JPanel pnlDanhSach = new JPanel(null);
         pnlDanhSach.setBorder(new TitledBorder("Danh sách khoa"));
@@ -181,7 +178,6 @@ public class QLKhoa extends JFrame {
             }
         });
 
-        btnThoat.addActionListener(e -> System.exit(0));
 
         listKhoa.addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {

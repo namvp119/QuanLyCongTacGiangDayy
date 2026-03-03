@@ -22,6 +22,7 @@ public class QuanLySinhVien extends JFrame {
 
     private boolean isInsert = false;
     private boolean isEditing = false;
+    private JFrame parent;
 
     private JButton btnLuu;
 
@@ -30,7 +31,7 @@ public class QuanLySinhVien extends JFrame {
         setTitle("Quản lý sinh viên");
         setSize(1100,600);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         initUI();
         loadTable();
@@ -71,7 +72,6 @@ public class QuanLySinhVien extends JFrame {
         JButton btnSua = new JButton("Sửa");
         btnLuu = new JButton("Lưu");
         JButton btnXoa = new JButton("Xóa");
-        JButton btnThoat = new JButton("Thoát");
 
         btnLuu.setEnabled(false);
 
@@ -80,7 +80,6 @@ public class QuanLySinhVien extends JFrame {
         pBtn.add(btnSua);
         pBtn.add(btnLuu);
         pBtn.add(btnXoa);
-        pBtn.add(btnThoat);
 
         JPanel mainLeft = new JPanel(new BorderLayout());
         mainLeft.add(left,BorderLayout.CENTER);
@@ -124,8 +123,6 @@ public class QuanLySinhVien extends JFrame {
         btnLuu.addActionListener(e -> saveData());
 
         btnXoa.addActionListener(e -> deleteData());
-
-        btnThoat.addActionListener(e -> dispose());
 
         table.getSelectionModel().addListSelectionListener(e -> fillForm());
     }

@@ -14,7 +14,7 @@ public class QLChucDanh extends JFrame {
     private JTable table;
     private DefaultTableModel model;
 
-    private JButton btnThem, btnSua, btnXoa, btnLuu, btnThoat;
+    private JButton btnThem, btnSua, btnXoa, btnLuu;
     private JPanel panelForm;
 
     private ChucDanhDAO dao = new ChucDanhDAO();
@@ -24,7 +24,7 @@ public class QLChucDanh extends JFrame {
         setTitle("QUẢN LÝ CHỨC DANH");
         setSize(600, 500);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         initUI();
         loadData();
@@ -61,13 +61,11 @@ public class QLChucDanh extends JFrame {
         btnSua = new JButton("Sửa");
         btnXoa = new JButton("Xóa");
         btnLuu = new JButton("Lưu");
-        btnThoat = new JButton("Thoát");
 
         panelBottom.add(btnThem);
         panelBottom.add(btnSua);
         panelBottom.add(btnXoa);
         panelBottom.add(btnLuu);
-        panelBottom.add(btnThoat);
 
         add(panelBottom, BorderLayout.SOUTH);
 
@@ -88,7 +86,6 @@ public class QLChucDanh extends JFrame {
 
         btnXoa.addActionListener(e -> delete());
         btnLuu.addActionListener(e -> save());
-        btnThoat.addActionListener(e -> dispose());
 
         table.getSelectionModel().addListSelectionListener(e -> showDetail());
     }
